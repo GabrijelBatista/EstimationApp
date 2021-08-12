@@ -24,7 +24,7 @@ class Project extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
-    public function projects()
+    public function modules()
     {
         return $this->hasMany('App\Models\Module');
     }

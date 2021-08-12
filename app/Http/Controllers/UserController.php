@@ -34,6 +34,21 @@ class UserController extends Controller
     public function update_profile(UpdateProfileRequest $request)
     {
         $user=Auth::user();
+        if($request->delete_image){
+            if($user->logo) {
+                unlink(public_path() . '/storage/images/profile/' . $user->logo);
+                $user->logo=null;
+                $user->save();
+
+                $response = [
+                    'success' => true,
+                    'message' => 'Profile photo removed!',
+                    'user' => $user,
+                ];
+
+                return response()->json($response);
+            }
+        }
         if($request->password) {
             if (strlen($request->password) < 8) {
                 $response = [

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateProfileRequest extends FormRequest
+class AddTaskRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,12 @@ class UpdateProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'nullable|string|max:50',
-            'password' => 'nullable|string|confirmed',
-            'image' => 'nullable|mimes:jpeg,jpg,png,gif|max:10000',
-            'delete_image' => 'boolean'
+            'name' => 'required|string|max:50',
+            'module_id' => 'numeric|required',
+            'best_hours' => 'numeric|required|max:1000',
+            'best_minutes' => 'numeric|required|max:59',
+            'worst_hours' => 'numeric|required|max:1000',
+            'worst_minutes' => 'numeric|required|max:59',
         ];
     }
 }

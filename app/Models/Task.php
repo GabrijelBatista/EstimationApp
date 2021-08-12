@@ -20,7 +20,7 @@ class Task extends Model
         'module_id'
     ];
 
-    public function modules()
+    public function module()
     {
         return $this->belongsTo('App\Models\Module');
     }
