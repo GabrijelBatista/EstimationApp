@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddModuleRequest;
 use App\Http\Requests\AddProjectRequest;
 use App\Http\Requests\AddTaskRequest;
+use App\Http\Requests\EditProjectRequest;
 use App\Models\Module;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -15,15 +16,19 @@ use Illuminate\Support\Facades\Auth;
 class ProjectController extends Controller
 {
     public function get_projects(){
-        $projects=Project::get()->all();
+        $projects=Project::where('user_id', Auth::user()->id)->orWhere('private_public', true)->get();
         foreach($projects as $project){
             $project->author=$project->user;
             $project->modules=$project->modules()->get();
             if($project->modules) {
+                $project->tasks=0;
                 foreach ($project->modules as $module){
                     $module->tasks=$module->tasks()->get();
+                    $project->tasks+=count($module->tasks);
                 }
             }
+            $project->created=$project->created_at->format("d. M Y.");
+            $project->updated=$project->updated_at->format("d. M Y.");
         }
         return response()->json($projects);
     }
@@ -33,9 +38,43 @@ class ProjectController extends Controller
             'name' => $request->name,
             'user_id' => Auth::user()->id
         ]);
-
+        $project->author=$project->user;
+        $project->created=$project->created_at->format("d. M Y.");
+        $project->updated=$project->updated_at->format("d. M Y.");
         return response()->json($project);
     }
+
+    public function edit_project(EditProjectRequest $request){
+        $project=Project::find($request->project_id);
+
+        if($request->name){
+            $project->name=$request->name;
+        }
+        if($request->public!==null){
+            $project->private_public=$request->public;
+        }
+        if($request->approved!==null){
+            $project->approved_notapproved=$request->approved;
+        }
+        if($request->sent!==null){
+            $project->sent_notsent=$request->sent;
+        }
+        $project->save();
+
+        $project->author=$project->user;
+        $project->modules=$project->modules()->get();
+        if($project->modules) {
+            $project->tasks=0;
+            foreach ($project->modules as $module){
+                $module->tasks=$module->tasks()->get();
+                $project->tasks+=count($module->tasks);
+            }
+        }
+        $project->created=$project->created_at->format("d. M Y.");
+        $project->updated=$project->updated_at->format("d. M Y.");
+        return response()->json($project);
+    }
+
     public function delete_project($id){
         $project=Project::find($id);
         $project->modules->delete();
@@ -43,6 +82,8 @@ class ProjectController extends Controller
         $projects=Project::get()->all();
         foreach($projects as $project){
             $project->author=$project->user;
+            $project->created=$project->created_at->format("d. M Y.");
+            $project->updated=$project->updated_at->format("d. M Y.");
         }
         return response()->json($projects);
     }
@@ -56,12 +97,14 @@ class ProjectController extends Controller
 
         $project = Project::find($request->project_id);
         $project->modules = $project->modules()->get();
+        $project->created=$project->created_at->format("d. M Y.");
+        $project->updated=$project->updated_at->format("d. M Y.");
+        $project->author=Auth::user();
         if($project->modules) {
             foreach ($project->modules as $module){
                 $module->tasks=$module->tasks()->get();
             }
         }
-
 
         return response()->json($project);
     }
@@ -89,6 +132,7 @@ class ProjectController extends Controller
             $module_best_minutes=0;
             $module_worst_hours=0;
             $module_worst_minutes=0;
+
             foreach($module_tasks as $task){
                 $module_best_hours+=$task->best_hours;
                 $module_best_minutes+=$task->best_minutes;
@@ -147,7 +191,11 @@ class ProjectController extends Controller
             $project->worst_hours=$project_worst_hours;
             $project->best_minutes=$project_best_minutes;
             $project->worst_minutes=$project_worst_minutes;
+            $project->save();
 
+            $project->author=Auth::user();
+            $project->created=$project->created_at->format("d. M Y.");
+            $project->updated=$project->updated_at->format("d. M Y.");
             $project->modules=$project->modules()->get();
             if($project->modules) {
                 foreach ($project->modules as $module){

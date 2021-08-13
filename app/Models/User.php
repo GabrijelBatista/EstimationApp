@@ -20,7 +20,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id'
     ];
+
+    public function role()
+    {
+        return $this->belongsTo('App\Models\Role');
+    }
 
     public function projects()
     {

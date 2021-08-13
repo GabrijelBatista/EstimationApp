@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AddTaskRequest extends FormRequest
+class EditProjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +24,11 @@ class AddTaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:250',
-            'module_id' => 'numeric|required',
-            'best_hours' => 'numeric|required|max:1000',
-            'best_minutes' => 'numeric|required|max:59',
-            'worst_hours' => 'numeric|required|max:1000',
-            'worst_minutes' => 'numeric|required|max:59',
+            'name' => 'string|max:50',
+            'project_id' => 'required|numeric',
+            'public' => 'boolean',
+            'sent' => 'boolean',
+            'approved' => 'boolean'
         ];
     }
 }

@@ -22,6 +22,9 @@ class CreateProjectsTable extends Migration
             $table->integer('average_minutes')->nullable();
             $table->integer('worst_hours')->nullable();
             $table->integer('worst_minutes')->nullable();
+            $table->boolean('private_public')->default(false);
+            $table->boolean('sent_notsent')->default(false);
+            $table->boolean('approved_notapproved')->default(false);
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });

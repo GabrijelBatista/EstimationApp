@@ -16,5 +16,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('delete_project', [ProjectController::class, 'delete_project']);
     Route::post('add_module', [ProjectController::class, 'add_module']);
     Route::post('add_task', [ProjectController::class, 'add_task']);
+    Route::post('edit_project', [ProjectController::class, 'edit_project']);
 });
 

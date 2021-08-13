@@ -17,7 +17,11 @@ class Project extends Model
         'average_minutes',
         'worst_hours',
         'worst_minutes',
-        'user_id'
+        'user_id',
+        'sent_notsent',
+        'approved_notapproved',
+        'public_private',
+
     ];
 
     public function user()
