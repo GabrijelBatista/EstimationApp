@@ -7,13 +7,20 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use League\Flysystem\File;
 
 class UserController extends Controller
 {
+    public function get_users()
+    {
+        $users=User::get()->all();
+        foreach($users as $user){
+            $user->title=$user->role->name;
+        }
+
+        return response()->json($users);
+    }
 
     public function register(RegisterRequest $request)
     {
@@ -46,7 +53,6 @@ class UserController extends Controller
                     'message' => 'Profile photo removed!',
                     'user' => $user,
                 ];
-
                 return response()->json($response);
             }
         }
@@ -103,7 +109,12 @@ class UserController extends Controller
         }
 
         $user=Auth::user();
-        $user->date=$user->created_at->format("d. M Y.");
+        if($user)
+        {
+            $user->date = $user->created_at->format("d. M Y.");
+            $user->title = $user->role->name;
+            $user->unreadNotifications->sortByDesc('read_at')->sortByDesc('created_at');
+        }
         $response = [
             'success' => $success,
             'message' => $message,

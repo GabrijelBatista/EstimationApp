@@ -35,7 +35,8 @@
 
 <script>
 import { LockClosedIcon } from '@heroicons/vue/solid'
-import axios from 'axios'
+import { mapGetters } from 'vuex'
+
 export default {
     components: {
         LockClosedIcon,
@@ -44,18 +45,21 @@ export default {
         return {
             email: "",
             password: "",
-            error: null
         }
     },
     computed: {
         show_error: function(){
             return this.error
-        }
+        },
+        ...mapGetters([
+            'getLive'
+        ])
     },
     methods: {
         handleSubmit(e) {
             e.preventDefault()
             if (this.password.length > 0) {
+                const toast=this.$toast
                 axios.get('http://estimate.local/sanctum/csrf-cookie').then(response => {
                     axios.post('http://estimate.local/api/login', {
                         email: this.email,
@@ -63,16 +67,26 @@ export default {
                     })
                         .then(response => {
                             if (response.data.success) {
-                                this.$toast.success(response.data.message);
+                                this.$toast.success(response.data.message)
                                 this.$store.commit('setUser', response.data.user)
                                 this.$router.push('/')
-                                this.error=null;
+                                /*Echo.private('App.Models.User.' + response.data.user.id)
+                                    .notification((notification) => {
+                                        this.$store.commit('setNotifications', notification.estimation)
+                                    });*/
+                                if(response.data.user.unread_notifications[0]) {
+                                    this.$store.commit('setNewNotification', true)
+                                }
+                                else{
+                                    this.$store.commit('setNewNotification', false)
+                                }
+                                this.$store.commit('setLive', true)
                             } else {
                                 this.$toast.error(response.data.message);
                             }
                         })
                         .catch(function (error) {
-                            console.error(error);
+                            toast.error(error);
                         });
                 })
             }

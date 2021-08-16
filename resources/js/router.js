@@ -18,18 +18,19 @@ const routes = [
     path: "/",
     name: "Home",
     component: HomePage,
+      meta: {
+          requiresAuth: true
+      }
   },
 
       {
         path: "/login",
         name: "Login",
         component: Login,
+          meta: {
+              noAuth: true
+          }
       },
-    {
-        path: "/register",
-        name: "Register",
-        component: Register,
-    },
     {
         path: "/register",
         name: "Register",
@@ -54,16 +55,25 @@ const routes = [
         path: "/projects",
         name: "Projects",
         component: Projects,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: "/project/:name",
         name: "AddProject",
         component: AddProject,
+        meta: {
+            requiresAuth: true
+        }
     },
   {
     path: "/profile/:name",
     name: "Profile",
     component: Profile,
+      meta: {
+          requiresAuth: true
+      }
   },
 ];
 
@@ -75,7 +85,14 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth) {
         if (!store.getters['getUser']) {
-            next({path: '/admin-login'})
+            next({path: '/login'})
+        } else {
+            next()
+        }
+    }
+    else if (to.meta.noAuth) {
+        if (store.getters['getUser']) {
+            next({path: '/'})
         } else {
             next()
         }

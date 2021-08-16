@@ -60,6 +60,8 @@ export default {
         handleSubmit(e) {
             e.preventDefault()
             if (this.password.length > 0) {
+                const toast=this.$toast
+                axios.get('http://estimate.local/sanctum/csrf-cookie').then(response => {
                     axios.post('http://estimate.local/api/register', {
                         name: this.name,
                         email: this.email,
@@ -75,8 +77,9 @@ export default {
                             }
                         })
                         .catch(function (error) {
-                            this.$toast.error(error)
+                            toast.error(error.response.data.message);
                         });
+                    });
             }
             else{
                 this.$toast.error('All fields are required.')

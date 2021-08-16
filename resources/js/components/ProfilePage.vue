@@ -33,6 +33,10 @@
                         <span class="italic ml-auto">{{ this.getUser.email }}</span>
                     </li>
                     <li class="flex items-center py-3">
+                        <span>Role</span>
+                        <span class="italic ml-auto">{{ this.getUser.title }}</span>
+                    </li>
+                    <li class="flex items-center py-3">
                         <span>Member since</span>
                         <span class="italic ml-auto">{{ this.getUser.date }}</span>
                     </li>

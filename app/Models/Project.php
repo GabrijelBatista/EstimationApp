@@ -18,6 +18,7 @@ class Project extends Model
         'worst_hours',
         'worst_minutes',
         'user_id',
+        'assigned_id',
         'sent_notsent',
         'approved_notapproved',
         'public_private',
@@ -27,6 +28,10 @@ class Project extends Model
     public function user()
     {
         return $this->belongsTo('App\Models\User');
+    }
+    public function assigned()
+    {
+        return $this->belongsTo('App\Models\User', 'assigned_id');
     }
     public function modules()
     {

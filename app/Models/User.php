@@ -32,6 +32,10 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\Project');
     }
+    public function saved_notifications()
+    {
+        return $this->hasMany('App\Models\SavedNotification');
+    }
 
     /**
      * The attributes that should be hidden for arrays.

@@ -22,10 +22,24 @@
                     </div>
                 </div>
                 <div v-if="this.getUser" class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                    <button class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-                        <span class="sr-only">View notifications</span>
-                        <BellIcon class="h-6 w-6" aria-hidden="true" />
-                    </button>
+                    <Menu as="div" class="ml-3 relative">
+                            <MenuButton class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                                <span class="sr-only">View notifications</span>
+                                <BellIcon :class="this.getNewNotification ? 'text-yellow-500 hover:text-yellow-700' : '' " class="w-6 h-6" aria-hidden="true"/>
+                            </MenuButton>
+                        <transition v-if="this.getUserNotifications || this.getUser.unread_notifications" enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+                            <div>
+                            <MenuItems class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <MenuItem :key="notification.id" v-for="notification in this.getUserNotifications" v-slot="{ active }">
+                                    <div @click="read_notification(notification.id, true)" class="cursor-pointer hover:no-underline border-b w-full" :class="[!notification.read_at ? 'bg-yellow-500 hover:bg-yellow-700' : '', 'block px-4 py-2 text-sm text-gray-700']">{{notification.estimation.body}}</div>
+                                </MenuItem>
+                                <MenuItem :key="notification.id" v-for="notification in this.getUser.unread_notifications" v-slot="{ active }">
+                                    <div @click="read_notification(notification.id, false)" :to="'/project/'+notification.data.estimation.estimationUrl" class="cursor-pointer hover:no-underline border-b w-full" :class="[!notification.read_at ? 'bg-yellow-500 hover:bg-yellow-700' : '', 'block px-4 py-2 text-sm text-gray-700']">{{notification.data.estimation.body}}</div>
+                                </MenuItem>
+                            </MenuItems>
+                            </div>
+                        </transition>
+                    </Menu>
 
                     <!-- Profile dropdown -->
                     <Menu as="div" class="ml-3 relative">
@@ -71,7 +85,8 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
 import { mapGetters } from 'vuex'
 import axios from "axios";
-
+import {useRoute} from "vue-router";
+import router from "../../router";
 
 const navigation = [
     { name: 'Dashboard', href: '/'},
@@ -99,18 +114,66 @@ export default {
     computed: {
         ...mapGetters([
             'getUser',
+            'getUserNotifications',
+            'getNewNotification'
         ])
     },
     methods: {
+        read_notification(id, broadcast){
+            let router=this.$router
+            let url=null
+            axios.get('http://estimate.local/api/read_notification/'+id)
+                .then(response => {
+                    this.$store.commit('readNotification', response.data)
+                    if(!broadcast) {
+                        this.getUser.unread_notifications.findIndex(function (not) {
+                            if (response.data.id === not.id) {
+                                not.read_at = response.data.read_at
+                                router.push('/project/'+not.data.estimation.estimationUrl)
+                                url=not.data.estimation.estimationUrl
+                            }
+                        });
+                    }
+                    else{
+                        this.getUserNotifications.findIndex(function (not) {
+                            if (response.data.id === not.id) {
+                                not.read_at = response.data.read_at
+                                router.push('/project/'+not.estimation.estimationUrl)
+                                url=not.estimation.estimationUrl
+                            }
+                        });
+                    }
+                    axios.get('http://estimate.local/api/get_projects', {
+                        name: this.name,
+                    })
+                        .then(response => {
+                            this.$store.commit('setProjects', response.data)
+                            let current=null
+                            response.data.findIndex(function(project) {
+                                if(project.name === url)
+                                    current=project
+                            });
+                            this.$store.commit('setCurrentProject', current)
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
         logout(){
             axios.get('http://estimate.local/api/logout', {
                 name: this.name,
             })
                 .then(response => {
-                    window.localStorage.clear()
                     this.$toast.success('Logged out!')
-                    this.$store.commit('setUser', null)
                     this.$router.push('/login')
+                    window.sessionStorage.clear()
+                    window.localStorage.clear()
+                    this.$store.commit('setUser', null)
+                    this.$store.commit('setUserNotifications', null)
                 })
                 .catch(function (error) {
                     console.error(error);
@@ -125,5 +188,14 @@ export default {
             open,
         }
     },
+    created(){
+        if(this.getUser) {
+            Echo.private('App.Models.User.' + this.getUser.id)
+                .notification((notification) => {
+                    this.$store.commit('setUserNotifications', notification)
+                });
+            this.$store.commit('setLive', true)
+        }
+    }
 }
 </script>
