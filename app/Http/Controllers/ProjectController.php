@@ -2,10 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SendEstimationsNotificationRequest;
-use App\Models\User;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\EstimationsNotification;
 use App\Http\Requests\AddModuleRequest;
 use App\Http\Requests\AddProjectRequest;
 use App\Http\Requests\AddTaskRequest;
@@ -18,10 +14,11 @@ use Illuminate\Support\Facades\Auth;
 class ProjectController extends Controller
 {
     public function get_projects(){
-        $projects=Project::where('user_id', Auth::user()->id)->orWhere('assigned_id', Auth::user()->id)->orWhere('private_public', true)->get();
+        $projects=Project::where('user_id', Auth::user()->id)->orWhere('assigned_id', Auth::user()->id)->orWhere('pm_id', Auth::user()->id)->orderBy('created_at', 'desc')->paginate(15);
         foreach($projects as $project){
             $project->author=$project->user;
             $project->assigned_to=$project->assigned;
+            $project->project_manager=$project->pm;
             $project->modules=$project->modules()->get();
             if($project->modules) {
                 $project->tasks=0;
@@ -30,26 +27,67 @@ class ProjectController extends Controller
                     $project->tasks+=count($module->tasks);
                 }
             }
+            $project->comments=$project->comments()->get();
+            if($project->comments) {
+                foreach ($project->comments as $comment){
+                    $comment->user;
+                    $comment->replies=$comment->replies()->get();
+                    foreach($comment->replies as $reply){
+                        $reply->user;
+                    }
+                }
+            }
             $project->created=$project->created_at->format("d. M Y.");
             $project->updated=$project->updated_at->format("d. M Y.");
         }
         return response()->json($projects);
     }
 
-    public function add_project(AddProjectRequest $request){
-        if($request->assigned_to){
-            $assigned=$request->assigned_to;
+    public function get_current_project($name){
+        $project=Project::where('name', $name)->first();
+        if($project->user_id===Auth::user()->id || $project->assigned_id===Auth::user()->id || $project->pm_id===Auth::user()->id) {
+            $project->author = $project->user;
+            $project->assigned_to = $project->assigned;
+            $project->pm;
+            $project->modules = $project->modules()->get();
+            if ($project->modules) {
+                $project->tasks = 0;
+                foreach ($project->modules as $module) {
+                    $module->tasks = $module->tasks()->get();
+                    $project->tasks += count($module->tasks);
+                }
+            }
+            $project->comments=$project->comments()->get();
+            if($project->comments) {
+                foreach ($project->comments as $comment){
+                    $comment->user;
+                    $comment->replies=$comment->replies()->get();
+                    foreach($comment->replies as $reply){
+                        $reply->user;
+                    }
+                }
+            }
+            $project->created = $project->created_at->format("d. M Y.");
+            $project->updated = $project->updated_at->format("d. M Y.");
+
+            return response()->json($project);
         }
         else{
-            $assigned=Auth::user()->id;
+            return response()->json();
         }
+    }
+
+    public function add_project(AddProjectRequest $request){
+
         $project=Project::create([
             'name' => $request->name,
             'user_id' => Auth::user()->id,
-            'assigned_id' => $assigned
+            'assigned_id' => $request->assigned_to,
+            'pm_id' => $request->pm
         ]);
         $project->author=$project->user;
         $project->assigned_to=$project->assigned;
+        $project->project_manager=$project->pm;
         $project->created=$project->created_at->format("d. M Y.");
         $project->updated=$project->updated_at->format("d. M Y.");
 
@@ -83,6 +121,17 @@ class ProjectController extends Controller
             }
         }
         $project->assigned_to=$project->assigned;
+        $project->project_manager=$project->pm;
+        $project->comments=$project->comments()->get();
+        if($project->comments) {
+            foreach ($project->comments as $comment){
+                $comment->user;
+                $comment->replies=$comment->replies()->get();
+                foreach($comment->replies as $reply){
+                    $reply->user;
+                }
+            }
+        }
         $project->created=$project->created_at->format("d. M Y.");
         $project->updated=$project->updated_at->format("d. M Y.");
         return response()->json($project);
@@ -96,38 +145,25 @@ class ProjectController extends Controller
                 $module->tasks()->delete();
             }
             $project->modules()->delete();
+            $project->comments()->delete();
             $project->delete();
         }
-        $projects=Project::get()->all();
-        foreach($projects as $project){
-            $project->author=$project->user;
-            $project->assigned_to=$project->assigned;
-            $project->created=$project->created_at->format("d. M Y.");
-            $project->updated=$project->updated_at->format("d. M Y.");
-        }
-        return response()->json($projects);
+
+        return response()->json();
     }
 
     public function add_module(AddModuleRequest $request)
     {
-        $module = Module::create([
-            'name' => $request->name,
-            'project_id' => $request->project_id
-        ]);
-
-        $project = Project::find($request->project_id);
-        $project->modules = $project->modules()->get();
-        $project->created=$project->created_at->format("d. M Y.");
-        $project->updated=$project->updated_at->format("d. M Y.");
-        $project->author=$project->user;
-        $project->assigned_to=$project->assigned;
-        if($project->modules) {
-            foreach ($project->modules as $module){
-                $module->tasks=$module->tasks()->get();
-            }
+        $project=Project::find($request->project_id);
+        if(Auth::user()->id===$project->assigned_id) {
+            $module=Module::create([
+                'name' => $request->name,
+                'project_id' => $request->project_id
+            ]);
+            return response()->json($module);
         }
 
-        return response()->json($project);
+        return response()->json();
     }
 
 
@@ -136,7 +172,7 @@ class ProjectController extends Controller
         $minutes=$request->best_minutes+$request->worst_minutes;
         $average_hours=$hours/2;
         $average_minutes=$minutes/2;
-            $task=Task::create([
+            Task::create([
                 'name' => $request->name,
                 'module_id' => $request->module_id,
                 'best_hours' => $request->best_hours,
@@ -206,8 +242,8 @@ class ProjectController extends Controller
             $project_average_hours=$project_hours/2;
             $project_average_minutes=$project_minutes/2;
 
-            $project->average_hours=$project_average_hours;
-            $project->average_minutes=$project_average_minutes;
+            $project->average_hours=round($project_average_hours);
+            $project->average_minutes=round($project_average_minutes);
             $project->best_hours=$project_best_hours;
             $project->worst_hours=$project_worst_hours;
             $project->best_minutes=$project_best_minutes;
@@ -216,12 +252,23 @@ class ProjectController extends Controller
 
             $project->author=$project->user;
             $project->assigned_to=$project->assigned;
+            $project->pm;
             $project->created=$project->created_at->format("d. M Y.");
             $project->updated=$project->updated_at->format("d. M Y.");
             $project->modules=$project->modules()->get();
             if($project->modules) {
                 foreach ($project->modules as $module){
                     $module->tasks=$module->tasks()->get();
+                }
+            }
+            $project->comments=$project->comments()->get();
+            if($project->comments) {
+                foreach ($project->comments as $comment){
+                    $comment->user;
+                    $comment->replies=$comment->replies()->get();
+                    foreach($comment->replies as $reply){
+                        $reply->user;
+                    }
                 }
             }
             return response()->json($project);
@@ -301,12 +348,23 @@ class ProjectController extends Controller
 
             $project->author=$project->user;
             $project->assigned_to=$project->assigned;
+            $project->pm;
             $project->created=$project->created_at->format("d. M Y.");
             $project->updated=$project->updated_at->format("d. M Y.");
             $project->modules=$project->modules()->get();
             if($project->modules) {
                 foreach ($project->modules as $module){
                     $module->tasks=$module->tasks()->get();
+                }
+            }
+            $project->comments=$project->comments()->get();
+            if($project->comments) {
+                foreach ($project->comments as $comment){
+                    $comment->user;
+                    $comment->replies=$comment->replies()->get();
+                    foreach($comment->replies as $reply){
+                        $reply->user;
+                    }
                 }
             }
             return response()->json($project);
@@ -354,6 +412,7 @@ class ProjectController extends Controller
 
             $project->author=$project->user;
             $project->assigned_to=$project->assigned;
+            $project->project_manager=$project->pm;
             $project->created=$project->created_at->format("d. M Y.");
             $project->updated=$project->updated_at->format("d. M Y.");
             $project->modules=$project->modules()->get();
@@ -362,7 +421,48 @@ class ProjectController extends Controller
                     $module->tasks=$module->tasks()->get();
                 }
             }
+            $project->comments=$project->comments()->get();
+            if($project->comments) {
+                foreach ($project->comments as $comment){
+                    $comment->user;
+                    $comment->replies=$comment->replies()->get();
+                    foreach($comment->replies as $reply){
+                        $reply->user;
+                    }
+                }
+            }
             return response()->json($project);
         }
 
+        public function search($search)
+        {
+            $projects=Project::where('name', 'LIKE', '%'.$search.'%')->paginate();
+
+            foreach($projects as $project){
+                $project->author=$project->user;
+                $project->assigned_to=$project->assigned;
+                $project->project_manager=$project->pm;
+                $project->modules=$project->modules()->get();
+                if($project->modules) {
+                    $project->tasks=0;
+                    foreach ($project->modules as $module){
+                        $module->tasks=$module->tasks()->get();
+                        $project->tasks+=count($module->tasks);
+                    }
+                }
+                $project->comments=$project->comments()->get();
+                if($project->comments) {
+                    foreach ($project->comments as $comment){
+                        $comment->user;
+                        $comment->replies=$comment->replies()->get();
+                        foreach($comment->replies as $reply){
+                            $reply->user;
+                        }
+                    }
+                }
+                $project->created=$project->created_at->format("d. M Y.");
+                $project->updated=$project->updated_at->format("d. M Y.");
+            }
+            return response()->json($projects);
+        }
 }

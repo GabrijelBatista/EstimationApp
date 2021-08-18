@@ -27,6 +27,7 @@ class CreateProjectsTable extends Migration
             $table->boolean('approved_notapproved')->default(false);
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('assigned_id')->constrained('users');
+            $table->foreignId('pm_id')->constrained('users');
             $table->timestamps();
         });
     }

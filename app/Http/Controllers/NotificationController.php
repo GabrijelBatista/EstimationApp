@@ -27,9 +27,8 @@ class NotificationController extends Controller
     }
 
     public function sendEstimationsNotification(SendEstimationsNotificationRequest $request) {
-        $userSchema = User::find($request->for);
+        $userSchema = User::where('id', $request->for)->orWhere('id', $request->pm)->get();
         $estimationData =[
-            'name' => $userSchema->name,
             'body' => $request->body,
             'thanks' => 'Thank you!',
             'estimationText' => 'Check it out!',

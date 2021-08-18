@@ -8,7 +8,7 @@
 <div class="min-w-screen min-h-scree flex justify-center font-sans overflow-hidden">
     <div class="w-full lg:w-5/6">
             <div class="flex m-auto w-max">
-                <div v-if="this.getUser" class="p-5 font-extrabold uppercase text-3xl leading-normal">{{ this.getCurrentProject.name }}
+                <div v-if="this.getUser && this.getCurrentProject" class="p-5 font-extrabold uppercase text-3xl leading-normal">{{ this.getCurrentProject.name }}
                     <svg @click="project_name_modal=true" v-if="this.getCurrentProject.author.id===this.getUser.id && !pdf" xmlns="http://www.w3.org/2000/svg" class="inline-block cursor-pointer text-yellow-500 transform hover:scale-110 hover:text-yellow-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
@@ -17,7 +17,7 @@
                     </svg>
                 </div>
             </div>
-        <div v-if="this.getUser" @dblclick="edit_module(value.id)" class="flex flex-col" v-for="(value, index) in this.getCurrentProject.modules" :key="value.id">
+        <div v-if="this.getUser && this.getCurrentProject" @dblclick="edit_module(value.id)" class="flex flex-col" v-for="(value, index) in this.getCurrentProject.modules" :key="value.id">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="py-3 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                     <div class="shadow bg-dark overflow-hidden border-b border-gray-200 rounded-2xl">
@@ -49,7 +49,7 @@
                 </tr>
                 </thead>
                 <tbody class="text-white text-sm font-light">
-                <tr v-if="value.tasks[0]" v-for="(value2, index2) in value.tasks" :key="value2.id" class="border-b border-gray-200">
+                <tr v-if="value.tasks" v-for="(value2, index2) in value.tasks" :key="value2.id" class="border-b border-gray-200">
                     <td class="py-3 px-6 text-left whitespace-nowrap">
                         <div class="flex items-center">
                             <span class="font-medium">{{index+1}}.{{index2+1}}.</span>
@@ -85,7 +85,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr v-if="edit==value.id && !pdf" class="border-2 border-gray-100">
+                <tr v-if="edit===value.id && !pdf" class="border-2 border-gray-100">
                     <td class="py-3 px-6 text-left whitespace-nowrap w-16">
                         <div class="flex w-16 items-center">
 
@@ -145,7 +145,7 @@
     <div v-if="project_name_modal" class="fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-gray-700 bg-opacity-75 flex flex-col items-center justify-center">
         <div class="w-full md:w-1/3 items-center p-6 space-x-6 bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-500">
             <div class="font-extrabold mx-auto text-2xl mb-4">CHANGE PROJECT NAME</div>
-            <input v-on:keyup.enter="edit_project_name" v-model="project_name" type="text" required class="text-center mx-auto appearance-none rounded-none relative block w-full py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" :placeholder="this.getCurrentProject.name" />
+            <input v-if="this.getCurrentProject" v-on:keyup.enter="edit_project_name" v-model="project_name" type="text" required class="text-center mx-auto appearance-none rounded-none relative block w-full py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" :placeholder="this.getCurrentProject.name" />
             <div class="mx-auto block">
                 <div @click="project_name_modal=false" class="inline-block bg-gray-600 px-4 float-left mt-4 mx-auto py-2 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
                     <span>Close</span>
@@ -170,31 +170,31 @@
             </div>
         </div>
     </div>
-    <div v-if="this.getUser" class="flex m-auto w-max">
-        <div @click="modal=true" v-if="this.getUser.id===this.getCurrentProject.author.id && !pdf" class="px-5 py-3 mt-4 cursor-pointer bg-green-300 hover:bg-green-400 rounded-2xl border-2 font-extrabold uppercase text-xl leading-normal">Create Module</div>
+    <div v-if="this.getUser && this.getCurrentProject" class="flex m-auto w-max">
+        <div @click="modal=true" v-if="this.getUser.id===this.getCurrentProject.assigned_to.id && !pdf" class="px-5 py-3 mt-4 cursor-pointer bg-green-300 hover:bg-green-400 rounded-2xl border-2 font-extrabold uppercase text-xl leading-normal">Create Module</div>
     </div>
-    <div v-if="this.getUser">
-        <div v-if="this.getUser.id===this.getCurrentProject.author.id && !pdf" class="flex cursor-pointer justify-between items-center p-2 md:float-right md:mr-5" @click="change_public(!this.getCurrentProject.private_public)">
+    <div v-if="this.getUser && this.getCurrentProject">
+        <div v-if="this.getUser.id===this.getCurrentProject.assigned_to.id && !pdf" class="flex cursor-pointer justify-between items-center p-2 md:float-right md:mr-5" @click="change_public(!this.getCurrentProject.private_public)">
             <div class="w-32 h-10 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-indigo-400': this.getCurrentProject.private_public}">
-                <div class="bg-white w-20 h-10 rounded-full shadow-md text-sm font-bold transform duration-300 ease-in-out" :class="{ 'translate-x-12': this.getCurrentProject.private_public,}"><div class="p-2" v-if="!this.getCurrentProject.private_public">PRIVATE</div><div class="p-2" v-if="this.getCurrentProject.private_public">PUBLIC</div></div>
+                <div class="bg-white w-20 h-10 rounded-full shadow-md text-sm font-bold transform duration-300 ease-in-out" :class="{ 'translate-x-12': this.getCurrentProject.private_public,}"><div class="px-2 py-1 text-xs" v-if="!this.getCurrentProject.private_public">IN PROGRESS</div><div class="px-2 py-2.5 text-xs" v-if="this.getCurrentProject.private_public">DONE</div></div>
             </div>
         </div>
     </div>
-    <div v-if="this.getUser">
-        <div v-if="this.getUser.role_id===3 && !pdf" class="flex cursor-pointer justify-between items-center p-2 md:float-right" @click="change_sent(!this.getCurrentProject.sent_notsent)">
+    <div v-if="this.getUser && this.getCurrentProject">
+        <div v-if="this.getUser.id===this.getCurrentProject.author.id && !pdf && this.getCurrentProject.private_public===1" class="flex cursor-pointer justify-between items-center p-2 md:float-right" @click="change_sent(!this.getCurrentProject.sent_notsent)">
             <div class="w-32 h-10 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-blue-600': this.getCurrentProject.sent_notsent}">
                 <div class="bg-white w-20 h-10 rounded-full shadow-md text-sm font-bold transform duration-300 ease-in-out" :class="{ 'translate-x-12': this.getCurrentProject.sent_notsent}"><div class="px-2 py-2.5 text-xs" v-if="!this.getCurrentProject.sent_notsent">NOT SENT</div><div class="px-2 py-2.5 text-xs" v-if="this.getCurrentProject.sent_notsent">SENT</div></div>
             </div>
         </div>
     </div>
-    <div v-if="this.getUser">
-        <div v-if="this.getUser.role_id===3 && !pdf" class="flex cursor-pointer justify-between items-center p-2 md:float-right" @click="change_approved(!this.getCurrentProject.approved_notapproved)">
+    <div v-if="this.getUser && this.getCurrentProject">
+        <div v-if="this.getUser.id===this.getCurrentProject.author.id && !pdf && this.getCurrentProject.private_public===1" class="flex cursor-pointer justify-between items-center p-2 md:float-right" @click="change_approved(!this.getCurrentProject.approved_notapproved)">
             <div class="w-32 h-10 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-green-600': this.getCurrentProject.approved_notapproved}">
                 <div class="bg-white w-20 h-10 rounded-full shadow-md text-sm font-bold transform duration-300 ease-in-out" :class="{ 'translate-x-12': this.getCurrentProject.approved_notapproved,}"><div class="px-2 py-1 text-xs" v-if="!this.getCurrentProject.approved_notapproved">NOT APPROVED</div><div class="px-2 py-2.5 text-xs" v-if="this.getCurrentProject.approved_notapproved">APPROVED</div></div>
             </div>
         </div>
     </div>
-    <div class="mb-5">
+    <div v-if="this.getCurrentProject" class="mb-5">
         <div class="inline-block mt-2 md:absolute md:right-5">
             <div class="flex mt-2 text-blue-600 font-extrabold text-3xl leading-normal">
                 <div class="mr-2 text-lg inline-block">Average: </div>
@@ -213,15 +213,21 @@
             </div>
         </div>
         <div class="mt-5 ml-5 mb-2 flex font-extrabold text-3xl leading-normal">
-            <div class="ml-2 mr-4 text-lg inline-block">Assigned to: </div>
-            <img v-if="this.getCurrentProject.assigned_to.logo" class="inline-block h-6 w-6 rounded-full" :src="'/storage/images/profile/'+this.getCurrentProject.assigned_to.logo" alt="" >
-            <img v-if="!this.getCurrentProject.assigned_to.logo" class="inline-block h-6 w-6 rounded-full" src="/storage/images/user.png" alt="" />
+            <div class="ml-2 mr-4 text-lg inline-block">Dev: </div>
+            <img v-if="this.getCurrentProject.assigned_to.logo && !pdf" class="inline-block h-6 w-6 rounded-full" :src="'/storage/images/profile/'+this.getCurrentProject.assigned_to.logo" alt="" >
+            <img v-if="!this.getCurrentProject.assigned_to.logo && !pdf" class="inline-block h-6 w-6 rounded-full" src="/storage/images/user.png" alt="" />
             <div class="ml-2 text-lg inline-block">{{ this.getCurrentProject.assigned_to.name }}</div>
+        </div>
+        <div class="ml-5 mb-2 flex font-extrabold text-3xl leading-normal">
+            <div class="ml-2 mr-4 text-lg inline-block">PM: </div>
+            <img v-if="this.getCurrentProject.pm.logo && !pdf" class="inline-block h-6 w-6 rounded-full" :src="'/storage/images/profile/'+this.getCurrentProject.pm.logo" alt="" >
+            <img v-if="!this.getCurrentProject.pm.logo && !pdf" class="inline-block h-6 w-6 rounded-full" src="/storage/images/user.png" alt="" />
+            <div class="ml-2 text-lg inline-block">{{ this.getCurrentProject.pm.name }}</div>
         </div>
     <div class="ml-5 mb-2 flex font-extrabold text-3xl leading-normal">
         <div class="ml-2 mr-4 text-lg inline-block">Author: </div>
-        <img v-if="this.getCurrentProject.author.logo" class="inline-block h-6 w-6 rounded-full" :src="'/storage/images/profile/'+this.getCurrentProject.author.logo" alt="" >
-        <img v-if="!this.getCurrentProject.author.logo" class="inline-block h-6 w-6 rounded-full" src="/storage/images/user.png" alt="" />
+        <img v-if="this.getCurrentProject.author.logo && !pdf" class="inline-block h-6 w-6 rounded-full" :src="'/storage/images/profile/'+this.getCurrentProject.author.logo" alt="" >
+        <img v-if="!this.getCurrentProject.author.logo && !pdf" class="inline-block h-6 w-6 rounded-full" src="/storage/images/user.png" alt="" />
         <div class="ml-2 text-lg inline-block">{{ this.getCurrentProject.author.name }}</div>
     </div>
     <div class="ml-5 mb-2 flex font-extrabold text-3xl leading-normal">
@@ -287,7 +293,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <div class="flex flex-col ml-3">
+                    <div v-if="this.getCurrentProject" class="flex flex-col ml-3">
                         <div class="font-medium leading-none">Delete <div class="font-extrabold inline-block italic">"{{this.getCurrentProject.name}}"</div> Project?</div>
                         <p class="text-sm text-gray-600 leading-none mt-1">You cannot undo this action!</p>
                     </div>
@@ -299,7 +305,74 @@
             </div>
         </div>
     </div>
-    <div id="editor"></div>
+    <div v-if="!pdf && this.getCurrentProject" class="antialiased mt-4 mx-auto max-w-screen-sm">
+        <h3 class="mb-4 text-lg font-semibold text-gray-900">Comments</h3>
+
+        <div v-if="this.getCurrentProject.comments" class="space-y-4">
+
+            <div :key="comment.id" v-for="comment in this.getCurrentProject.comments" class="flex">
+                <div v-if="comment.user.logo" class="flex-shrink-0 mr-3">
+                    <img class="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10" :src="'/storage/images/profile/'+comment.user.logo" alt="">
+                </div>
+                <div v-if="!comment.user.logo" class="flex-shrink-0 mr-3">
+                    <img class="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10" src="/storage/images/user.png" alt="">
+                </div>
+                <div class="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
+                    <div v-if="this.getUser" class="mb-3">
+                        <strong class="inline-block">{{comment.user.name}}</strong>
+                        <svg v-if="this.getUser.id===comment.user_id" @click="delete_comment(comment.id)" class="w-5 -mr-4 float-right transform cursor-pointer text-red-500 hover:text-red-700 hover:scale-110" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </div>
+                        <div v-if="editing_comment!=comment.id" @dblclick="check_editing_comment(comment.id, comment.user_id); editing_comment_text=comment.text" class="w-full">{{comment.text}}</div>
+                        <textarea v-if="editing_comment===comment.id" v-on:keyup.esc="editing_comment=null; editing_comment_text=null" v-on:keyup.enter="edit_comment(comment.id)" v-model="editing_comment_text" class="w-full"></textarea>
+                    <div v-if="reply_id===comment.id">
+                    <h4 class="my-5 uppercase tracking-wide text-gray-400 font-bold text-xs">Replies</h4>
+                    <div :key="reply.id" v-for="reply in comment.replies" class="space-y-4 my-5">
+                        <div class="flex">
+                            <div v-if="reply.user.logo" class="flex-shrink-0 mr-3">
+                                <img class="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10" :src="'/storage/images/profile/'+reply.user.logo" alt="">
+                            </div>
+                            <div v-if="!reply.user.logo" class="flex-shrink-0 mr-3">
+                                <img class="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10" src="/storage/images/user.png" alt="">
+                            </div>
+                            <div class="flex-1 bg-gray-100 rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
+                                <div class="mb-3">
+                                    <strong class="inline-block">{{reply.user.name}}</strong>
+                                    <svg v-if="this.getUser.id===reply.user_id" @click="delete_reply(comment.id,reply.id)" class="w-5 -mr-4 float-right transform cursor-pointer text-red-500 hover:text-red-700 hover:scale-110" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </div>
+                                <p v-if="editing_reply!=reply.id" @dblclick="check_editing_reply(reply.id, reply.user_id); editing_reply_text=reply.text" class="text-xs sm:text-sm">
+                                    {{reply.text}}
+                                </p>
+                                <textarea v-if="editing_reply===reply.id" v-on:keyup.esc="editing_reply=null; editing_reply_text=null" v-on:keyup.enter="edit_reply(reply.id)" v-model="editing_reply_text" class="w-full"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                        <span v-if="reply_id===comment.id" @click="reply_id=null" class="mt-2 text-sm cursor-pointer float-left text-blue-500 font-italic">Hide replies</span>
+                        <span @click="show_reply(comment.id)" class="mt-2 cursor-pointer text-sm float-right text-blue-500 font-italic">Reply</span>
+
+                    <div @click="show_reply(comment.id)" v-if="comment.replies[0] && reply_id!=comment.id" class="mt-4 cursor-pointer flex items-center">
+                        <div id="reply_images" class="flex -space-x-2 mr-2">
+                            <img :key="reply.id" class="rounded-full w-6 h-6 border border-white" v-for="reply in comment.replies" :src="reply.user.logo ? '/storage/images/profile/'+reply.user.logo : '/storage/images/user.png'" alt="">
+                        </div>
+                        <div class="text-sm text-gray-500 cursor-pointer font-semibold">
+                            {{ comment.replies.length }} replies
+                        </div>
+                    </div>
+
+                    <div class="mx-auto mt-5" v-if="reply_id===comment.id">
+                        <textarea class="flex-1 w-11/12 outline-black rounded-lg float-right px-4 py-2 sm:px-6 sm:py-4 leading-relaxed my-3 h-24 resize-none" v-on:keyup.enter="add_reply(comment.id)" v-model="reply" placeholder="Leave a reply..."></textarea>
+                        <button @click="add_reply(comment.id)" class="py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded mb-4 px-4 float-right">ADD</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <textarea class="flex-1 w-11/12 outline-black rounded-lg float-right px-4 py-2 sm:px-6 sm:py-4 leading-relaxed my-3 h-32 resize-none" v-on:keyup.enter="add_comment" v-model="comment" placeholder="Leave a comment..."></textarea>
+            <button @click="add_comment" class="py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded mb-4 px-4 float-right">ADD</button>
+    </div>
 </div>
 </template>
 
@@ -308,10 +381,15 @@ import { mapGetters } from 'vuex'
 import html2canvas from "html2canvas"
 import { jsPDF } from "jspdf"
 import { useRoute } from 'vue-router'
+import axios from "axios";
 
 export default{
     data(){
         return {
+            editing_reply_text: null,
+            editing_reply: null,
+            editing_comment_text: null,
+            editing_comment: null,
             pdf: false,
             delete_project_modal: false,
             delete_module_modal: false,
@@ -322,6 +400,9 @@ export default{
             project_name: null,
             edit: null,
             modal: false,
+            comment:null,
+            reply_id:null,
+            reply:null,
             module: {
                 name: null,
             },
@@ -346,6 +427,143 @@ export default{
         ])
     },
     methods:{
+        check_editing_reply(id, user_id){
+            if(user_id===this.getUser.id){
+                this.editing_reply=id
+            }
+        },
+        edit_reply(id){
+            axios.post('http://estimate.local/api/edit_reply', {
+                reply_id: id,
+                text: this.editing_reply_text
+            })
+                .then(response => {
+                    let e=this
+                    this.$toast.success('Reply edited!')
+                    this.editing_reply=null
+                    this.getCurrentProject.comments.findIndex(function (comment) {
+                        comment.replies.findIndex(function (reply){
+                            if(id===reply.id){
+                                reply.text=e.editing_reply_text
+                            }
+                        })
+                    })
+                    this.editing_reply_text=null
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        check_editing_comment(id, user_id){
+            if(user_id===this.getUser.id){
+                this.editing_comment=id
+            }
+        },
+        edit_comment(id){
+            axios.post('http://estimate.local/api/edit_comment', {
+                comment_id: id,
+                text: this.editing_comment_text
+            })
+                .then(response => {
+                    let e=this
+                    this.$toast.success('Comment edited!')
+                    this.editing_comment=null
+                    this.getCurrentProject.comments.findIndex(function (comment) {
+                        if(id===comment.id){
+                            comment.text=e.editing_comment_text
+                        }
+                    })
+                    this.editing_comment_text=null
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        delete_comment(id){
+            let e=this
+            if (confirm("Delete this comment?") === true) {
+                axios.get('http://estimate.local/api/delete_comment/'+id)
+                    .then(response => {
+                        this.$toast.success('Comment deleted!')
+                        this.getCurrentProject.comments.findIndex(function (comment) {
+                            if(id===comment.id){
+                                const index = e.getCurrentProject.comments.indexOf(comment);
+                                if (index > -1) {
+                                    e.getCurrentProject.comments.splice(index, 1)
+                                }
+                            }
+                        })
+
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        },
+        delete_reply(comment_id, reply_id){
+            if (confirm("Delete this reply?") === true) {
+                axios.get('http://estimate.local/api/delete_reply/'+reply_id)
+                    .then(response => {
+                        this.$toast.success('Reply deleted!')
+                        this.getCurrentProject.comments.findIndex(function (comment) {
+                            if(comment_id===comment.id){
+                                comment.replies.findIndex(function (reply) {
+                                    if(reply_id===reply.id){
+                                        const index = comment.replies.indexOf(reply);
+                                        if (index > -1) {
+                                            comment.replies.splice(index, 1)
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        },
+        add_reply(id){
+            axios.post('http://estimate.local/api/add_reply', {
+                comment_id: id,
+                reply: this.reply
+            })
+                .then(response => {
+                    this.$toast.success('Reply posted!')
+                    this.reply=null
+                    this.getCurrentProject.comments.findIndex(function (comment) {
+                        if(id===comment.id){
+                            return comment.replies.push(response.data)
+                        }
+                    })
+
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        show_reply(id){
+            if(this.reply_id===id){
+                this.reply_id=null
+            }
+            else{
+                this.reply_id=id
+            }
+        },
+        add_comment(){
+            axios.post('http://estimate.local/api/add_comment', {
+                project_id: this.getCurrentProject.id,
+                comment: this.comment
+            })
+                .then(response => {
+                    this.$toast.success('Comment posted!')
+                    this.comment=null
+                    this.getCurrentProject.comments.push(response.data)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
         nextPlease(id){
             if(this.task.name===null) {
                 document.getElementById('task_name').focus();
@@ -369,12 +587,11 @@ export default{
         delete_project(){
             axios.get('http://estimate.local/api/delete_project/'+this.getCurrentProject.id)
                 .then(response => {
-                    this.delete_project_modal=false
                     this.$toast.success('Project deleted!')
-                    this.$router.push('/projects')
+                    this.$router.push('/')
                 })
                 .catch(function (error) {
-                    console.error(error);
+                    console.log(error);
                 });
         },
         delete_module(){
@@ -386,7 +603,7 @@ export default{
                     this.$store.commit('setCurrentProject', response.data)
                 })
                 .catch(function (error) {
-                    console.error(error);
+                    console.log(error);
                 });
         },
         delete_task(){
@@ -398,7 +615,7 @@ export default{
                     this.$store.commit('setCurrentProject', response.data)
                 })
                 .catch(function (error) {
-                    console.error(error);
+                    console.log(error);
                 });
         },
         edit_project_name(){
@@ -413,50 +630,99 @@ export default{
                     this.$store.commit('setCurrentProject', response.data)
                 })
                 .catch(function (error) {
-                    console.error(error);
+                    console.log(error);
                 });
         },
         change_sent(value){
-            axios.post('http://estimate.local/api/edit_project', {
-                project_id: this.getCurrentProject.id,
-                sent: value
-            })
-                .then(response => {
-                    this.$toast.success('Project updated!')
-                    this.$store.commit('setCurrentProject', response.data)
+            if (confirm("Are you sure that you want to status of this project?") === true) {
+                axios.post('http://estimate.local/api/edit_project', {
+                    project_id: this.getCurrentProject.id,
+                    sent: value
                 })
-                .catch(function (error) {
-                    console.error(error);
-                });
+                    .then(response => {
+                        if(value===1) {
+                            axios.post('http://estimate.local/api/estimations-notification', {
+                                for: response.data.assigned_to.id,
+                                pm: response.data.project_manager.id,
+                                body: 'Estimation for ' + response.data.name + ' project is sent to client!',
+                                url: response.data.name
+                            })
+                                .then(response => {
+                                    //console.log(response)
+                                })
+                                .catch(function (error) {
+                                    console.log(error.data)
+                                });
+                        }
+                        this.$toast.success('Project updated!')
+                        this.$store.commit('setCurrentProject', response.data)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
         },
         change_approved(value){
-            axios.post('http://estimate.local/api/edit_project', {
-                project_id: this.getCurrentProject.id,
-                approved: value
-            })
-                .then(response => {
-                    this.$toast.success('Project updated!')
-                    this.$store.commit('setCurrentProject', response.data)
+            if (confirm("Are you sure that you want to status of this project?") === true) {
+                axios.post('http://estimate.local/api/edit_project', {
+                    project_id: this.getCurrentProject.id,
+                    approved: value
                 })
-                .catch(function (error) {
-                    console.error(error);
-                });
+                    .then(response => {
+                        console.log(value)
+                        if(value===true) {
+                            axios.post('http://estimate.local/api/estimations-notification', {
+                                for: response.data.assigned_to.id,
+                                pm: response.data.project_manager.id,
+                                body: 'Estimation for ' + response.data.name + ' project is approved by client!',
+                                url: response.data.name
+                            })
+                                .then(response => {
+                                    //console.log(response)
+                                })
+                                .catch(function (error) {
+                                    console.log(error.data)
+                                });
+                        }
+                        this.$toast.success('Project updated!')
+                        this.$store.commit('setCurrentProject', response.data)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
         },
         change_public(value){
-            axios.post('http://estimate.local/api/edit_project', {
-                project_id: this.getCurrentProject.id,
-                public: value
-            })
-                .then(response => {
-                    this.$toast.success('Project updated!')
-                    this.$store.commit('setCurrentProject', response.data)
+            if (confirm("Are you sure that you want to change status of this project?") === true) {
+                axios.post('http://estimate.local/api/edit_project', {
+                    project_id: this.getCurrentProject.id,
+                    public: value
                 })
-                .catch(function (error) {
-                    console.error(error);
-                });
+                    .then(response => {
+                        if(value===1) {
+                            axios.post('http://estimate.local/api/estimations-notification', {
+                                for: response.data.author.id,
+                                pm: response.data.project_manager.id,
+                                body: 'Estimation for ' + response.data.name + ' project is done!',
+                                url: response.data.name
+                            })
+                                .then(response => {
+                                    //console.log(response)
+                                })
+                                .catch(function (error) {
+                                    console.log(error.data)
+                                });
+                        }
+                        this.$toast.success('Project updated!')
+                        this.$store.commit('setCurrentProject', response.data)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
         },
         edit_module(value){
-            if(this.getUser.id===this.getCurrentProject.author.id){
+            if(this.getUser.id===this.getCurrentProject.assigned_to.id){
                 if(this.edit!=value) {
                     this.edit = value
                 }
@@ -472,13 +738,13 @@ export default{
                     project_id: this.getCurrentProject.id
                 })
                     .then(response => {
+                        this.getCurrentProject.modules.push(response.data)
                         this.$toast.success('Module created!')
-                        this.$store.commit('setCurrentProject', response.data)
                         this.module.name = null
                         this.modal=null
                     })
                     .catch(function (error) {
-                        console.error(error);
+                        console.log(error);
                     });
             }
             else{
@@ -508,7 +774,7 @@ export default{
                         document.getElementById('task_name').focus()
                     })
                     .catch(function (error) {
-                        console.error(error);
+                        console.log(error);
                     });
             }
             else{
@@ -535,21 +801,19 @@ export default{
         }
     },
     created(){
-        axios.get('http://estimate.local/api/get_projects', {
-            name: this.name,
-        })
+        let route_name=useRoute()
+        axios.get('http://estimate.local/api/get_current_project/'+route_name.params.name)
             .then(response => {
-                this.$store.commit('setProjects', response.data)
+                if(!response.data){
+                    this.$router.push('/')
+                }
+                else {
+                    this.$store.commit('setCurrentProject', response.data)
+                }
             })
             .catch(function (error) {
-                console.error(error);
+                console.log(error);
             });
-        let current=null
-        this.getProjects.findIndex(function(project) {
-            if(project.name === useRoute().params.name)
-                current=project
-        });
-        this.$store.commit('setCurrentProject', current)
-    }
+    },
 }
 </script>

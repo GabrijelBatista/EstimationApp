@@ -113,7 +113,7 @@ class UserController extends Controller
         {
             $user->date = $user->created_at->format("d. M Y.");
             $user->title = $user->role->name;
-            $user->unreadNotifications->sortByDesc('read_at')->sortByDesc('created_at');
+            $user->unreadNotifications->sortByDesc('created_at');
         }
         $response = [
             'success' => $success,

@@ -1,7 +1,6 @@
 import { createWebHistory, createRouter } from "vue-router";
 import store from './store/index'
 
-import HomePage from "./components/HomePage.vue";
 import Profile from "./components/ProfilePage.vue";
 import Projects from "./components/ProjectsPage.vue";
 import AddProject from "./components/AddProject.vue";
@@ -14,15 +13,6 @@ import PasswordReset from "./components/auth/PasswordReset.vue";
 
 
 const routes = [
-  {
-    path: "/",
-    name: "Home",
-    component: HomePage,
-      meta: {
-          requiresAuth: true
-      }
-  },
-
       {
         path: "/login",
         name: "Login",
@@ -52,7 +42,7 @@ const routes = [
         component: RequestToken,
     },
     {
-        path: "/projects",
+        path: "/",
         name: "Projects",
         component: Projects,
         meta: {

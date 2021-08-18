@@ -44,7 +44,7 @@ class EstimationsNotification extends Notification implements ShouldBroadcast
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->greeting('Greetings '.$this->estimationData['name'].',')
+            ->greeting('Greetings '.$notifiable->name.',')
             ->line($this->estimationData['body'])
             ->action($this->estimationData['estimationText'], 'http://estimate.local/project/'.$this->estimationData['estimationUrl'])
             ->line($this->estimationData['thanks']);

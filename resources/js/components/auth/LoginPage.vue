@@ -70,10 +70,10 @@ export default {
                                 this.$toast.success(response.data.message)
                                 this.$store.commit('setUser', response.data.user)
                                 this.$router.push('/')
-                                /*Echo.private('App.Models.User.' + response.data.user.id)
+                                Echo.private('App.Models.User.' + response.data.user.id)
                                     .notification((notification) => {
-                                        this.$store.commit('setNotifications', notification.estimation)
-                                    });*/
+                                        this.$store.commit('setUserNotifications', notification.estimation)
+                                    });
                                 if(response.data.user.unread_notifications[0]) {
                                     this.$store.commit('setNewNotification', true)
                                 }

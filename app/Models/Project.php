@@ -19,6 +19,7 @@ class Project extends Model
         'worst_minutes',
         'user_id',
         'assigned_id',
+        'pm_id',
         'sent_notsent',
         'approved_notapproved',
         'public_private',
@@ -33,8 +34,16 @@ class Project extends Model
     {
         return $this->belongsTo('App\Models\User', 'assigned_id');
     }
+    public function pm()
+    {
+        return $this->belongsTo('App\Models\User', 'pm_id');
+    }
     public function modules()
     {
         return $this->hasMany('App\Models\Module');
+    }
+    public function comments()
+    {
+        return $this->hasMany('App\Models\Comment');
     }
 }

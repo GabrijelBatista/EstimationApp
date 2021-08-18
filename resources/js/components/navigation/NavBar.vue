@@ -25,7 +25,7 @@
                     <Menu as="div" class="ml-3 relative">
                             <MenuButton class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                                 <span class="sr-only">View notifications</span>
-                                <BellIcon :class="this.getNewNotification ? 'text-yellow-500 hover:text-yellow-700' : '' " class="w-6 h-6" aria-hidden="true"/>
+                                <BellIcon :class="this.getNewNotification ? 'animate-ping text-yellow-500 hover:text-yellow-700' : '' " class="w-6 h-6" aria-hidden="true"/>
                             </MenuButton>
                         <transition v-if="this.getUserNotifications || this.getUser.unread_notifications" enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
                             <div>
@@ -34,8 +34,9 @@
                                     <div @click="read_notification(notification.id, true)" class="cursor-pointer hover:no-underline border-b w-full" :class="[!notification.read_at ? 'bg-yellow-500 hover:bg-yellow-700' : '', 'block px-4 py-2 text-sm text-gray-700']">{{notification.estimation.body}}</div>
                                 </MenuItem>
                                 <MenuItem :key="notification.id" v-for="notification in this.getUser.unread_notifications" v-slot="{ active }">
-                                    <div @click="read_notification(notification.id, false)" :to="'/project/'+notification.data.estimation.estimationUrl" class="cursor-pointer hover:no-underline border-b w-full" :class="[!notification.read_at ? 'bg-yellow-500 hover:bg-yellow-700' : '', 'block px-4 py-2 text-sm text-gray-700']">{{notification.data.estimation.body}}</div>
+                                    <div @click="read_notification(notification.id, false)" class="cursor-pointer hover:no-underline border-b w-full" :class="[!notification.read_at ? 'bg-yellow-500 hover:bg-yellow-700' : '', 'block px-4 py-2 text-sm text-gray-700']">{{notification.data.estimation.body}}</div>
                                 </MenuItem>
+                                <div v-if="!this.getUserNotifications[0] && !this.getUser.unread_notifications[0]" class="py-2 hover:no-underline border-b w-full">Nothing to show</div>
                             </MenuItems>
                             </div>
                         </transition>
@@ -73,7 +74,7 @@
 
         <DisclosurePanel class="sm:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <router-link v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.name == current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block px-3 py-2 rounded-md text-base font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</router-link>
+                <router-link v-for="item in navigation" :key="item.name" :to="item.href" active-class="border-white radius-2xl" class="block px-3 py-2 text-white no-underline rounded-md text-base font-medium">{{ item.name }}</router-link>
             </div>
         </DisclosurePanel>
     </Disclosure>
@@ -89,8 +90,7 @@ import {useRoute} from "vue-router";
 import router from "../../router";
 
 const navigation = [
-    { name: 'Dashboard', href: '/'},
-    { name: 'Projects', href: '/projects'},
+    { name: 'Projects', href: '/'},
 ]
 
 export default {
@@ -138,22 +138,14 @@ export default {
                         this.getUserNotifications.findIndex(function (not) {
                             if (response.data.id === not.id) {
                                 not.read_at = response.data.read_at
-                                router.push('/project/'+not.estimation.estimationUrl)
-                                url=not.estimation.estimationUrl
+                                router.push('/project/' + not.estimation.estimationUrl)
+                                url = not.estimation.estimationUrl
                             }
                         });
                     }
-                    axios.get('http://estimate.local/api/get_projects', {
-                        name: this.name,
-                    })
+                    axios.get('http://estimate.local/api/get_current_project/'+url)
                         .then(response => {
-                            this.$store.commit('setProjects', response.data)
-                            let current=null
-                            response.data.findIndex(function(project) {
-                                if(project.name === url)
-                                    current=project
-                            });
-                            this.$store.commit('setCurrentProject', current)
+                            this.$store.commit('setCurrentProject', response.data)
                         })
                         .catch(function (error) {
                             console.log(error);
@@ -164,9 +156,7 @@ export default {
                 });
         },
         logout(){
-            axios.get('http://estimate.local/api/logout', {
-                name: this.name,
-            })
+            axios.get('http://estimate.local/api/logout')
                 .then(response => {
                     this.$toast.success('Logged out!')
                     this.$router.push('/login')

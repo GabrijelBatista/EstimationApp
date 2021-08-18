@@ -10,12 +10,16 @@ export default createStore({
         users: [],
         user_notifications: [],
         new_notification: false,
-        live: false
+        live: false,
+        developers: [],
+        pms: []
     },
     actions: {
 
     },
     getters: {
+        getDevelopers: state => state.developers,
+        getPms: state => state.pms,
         getLive: state => state.live,
         getUser: state => state.user,
         getUserNotifications: state => state.user_notifications,
@@ -27,14 +31,6 @@ export default createStore({
     mutations: {
         readNotification(state, notification){
             state.new_notification=false
-            state.user_notifications.findIndex(function (not) {
-                if(not.read_at){
-                    state.new_notification=true
-                }
-                if(notification.id===not.id){
-                    not.read_at=notification.read_at
-                }
-            });
         },
         setUserNotifications(state, notification) {
             if(notification===null) {
@@ -56,7 +52,17 @@ export default createStore({
             state.user=user;
         },
         setUsers(state, users) {
+            state.developers=[];
+            state.pms=[];
             state.users=users;
+            users.findIndex(function (user) {
+                if(user.role_id===1){
+                    state.developers.push(user)
+                }
+                else if(user.role_id===2){
+                    state.pms.push(user)
+                }
+            })
         },
         setCurrentProject(state, project) {
             state.current_project=project;
