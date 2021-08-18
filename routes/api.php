@@ -30,6 +30,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('add_module', [ProjectController::class, 'add_module']);
     Route::post('add_task', [ProjectController::class, 'add_task']);
     Route::post('edit_project', [ProjectController::class, 'edit_project']);
+    Route::post('edit_module', [ProjectController::class, 'edit_module']);
     Route::get('delete_task/{id}', [ProjectController::class, 'delete_task']);
     Route::get('delete_module/{id}', [ProjectController::class, 'delete_module']);
 

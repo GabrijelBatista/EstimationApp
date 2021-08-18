@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddModuleRequest;
 use App\Http\Requests\AddProjectRequest;
 use App\Http\Requests\AddTaskRequest;
+use App\Http\Requests\EditModuleRequest;
 use App\Http\Requests\EditProjectRequest;
 use App\Models\Module;
 use App\Models\Task;
@@ -161,6 +162,18 @@ class ProjectController extends Controller
                 'project_id' => $request->project_id
             ]);
             return response()->json($module);
+        }
+
+        return response()->json();
+    }
+
+    public function edit_module(EditModuleRequest $request)
+    {
+        $module=Module::find($request->module_id);
+        $project=$module->project;
+        if(Auth::user()->id===$project->assigned_id) {
+            $module->name=$request->name;
+            $module->save();
         }
 
         return response()->json();

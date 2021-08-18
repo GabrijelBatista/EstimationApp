@@ -28,7 +28,11 @@
                         {{ index+1 }}.
                     </div>
                     <div class="inline-block">
-                        {{ value.name }}
+                        <div class="inline-block" v-if="!edit_module_name">{{ value.name }}</div>
+                        <input class="inline-block text-black text-center font-medium" v-if="edit_module_name" v-model="module_name" v-on:keyup.enter="save_module_name(value.id)">
+                        <svg v-if="this.getUser.id===this.getCurrentProject.assigned_id" @click="edit_module_name=!edit_module_name; module_name=value.name" xmlns="http://www.w3.org/2000/svg" class="inline-block cursor-pointer ml-2 text-yellow-500 transform hover:scale-110 hover:text-yellow-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
                     </div>
                     <div v-if="this.getUser.id===this.getCurrentProject.assigned_id && !pdf" @click="delete_module_modal=true; delete_module_id=value.id" class="w-6 absolute right-4 inline-block transform cursor-pointer text-red-500 hover:text-red-700 hover:scale-110">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -45,7 +49,11 @@
                     <th class="py-3 px-6 text-green-600 text-center">BEST CASE</th>
                     <th class="py-3 px-6 text-blue-600 text-center">AVERAGE</th>
                     <th class="py-3 px-6 text-red-600 text-center">WORST CASE</th>
-                    <th class="py-3 px-6 text-center"></th>
+                    <th class="py-3 px-6 text-center">
+                        <svg v-if="this.getUser.id===this.getCurrentProject.assigned_id" @click="edit_module(value.id)" xmlns="http://www.w3.org/2000/svg" class="inline-block cursor-pointer text-yellow-500 transform hover:scale-110 hover:text-yellow-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                    </th>
                 </tr>
                 </thead>
                 <tbody class="text-white text-sm font-light">
@@ -320,12 +328,16 @@
                 <div class="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
                     <div v-if="this.getUser" class="mb-3">
                         <strong class="inline-block">{{comment.user.name}}</strong>
+                        <svg v-if="this.getUser.id===comment.user_id" @click="check_editing_comment(comment.id, comment.user_id); editing_comment_text=comment.text" xmlns="http://www.w3.org/2000/svg" class="inline-block -ml-5 cursor-pointer text-yellow-500 float-right transform hover:scale-110 hover:text-yellow-700 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
                         <svg v-if="this.getUser.id===comment.user_id" @click="delete_comment(comment.id)" class="w-5 -mr-4 float-right transform cursor-pointer text-red-500 hover:text-red-700 hover:scale-110" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
                     </div>
                         <div v-if="editing_comment!=comment.id" @dblclick="check_editing_comment(comment.id, comment.user_id); editing_comment_text=comment.text" class="w-full">{{comment.text}}</div>
-                        <textarea v-if="editing_comment===comment.id" v-on:keyup.esc="editing_comment=null; editing_comment_text=null" v-on:keyup.enter="edit_comment(comment.id)" v-model="editing_comment_text" class="w-full"></textarea>
+                        <textarea v-if="editing_comment===comment.id" v-on:keyup.esc="editing_comment=null; editing_comment_text=null" v-on:keyup.enter="edit_comment(comment.id)" v-model="editing_comment_text" class="h-32 resize-none w-full"></textarea>
+                        <span v-if="editing_comment===comment.id" @click="editing_comment=null; editing_comment_text=null" class=" text-xs cursor-pointer float-left text-blue-500 font-italic">Cancel</span>
                     <div v-if="reply_id===comment.id">
                     <h4 class="my-5 uppercase tracking-wide text-gray-400 font-bold text-xs">Replies</h4>
                     <div :key="reply.id" v-for="reply in comment.replies" class="space-y-4 my-5">
@@ -339,6 +351,9 @@
                             <div class="flex-1 bg-gray-100 rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
                                 <div class="mb-3">
                                     <strong class="inline-block">{{reply.user.name}}</strong>
+                                    <svg v-if="this.getUser.id===reply.user_id" @click="check_editing_reply(reply.id, reply.user_id); editing_reply_text=reply.text" xmlns="http://www.w3.org/2000/svg" class="inline-block -ml-5 cursor-pointer text-yellow-500 float-right transform hover:scale-110 hover:text-yellow-700 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                    </svg>
                                     <svg v-if="this.getUser.id===reply.user_id" @click="delete_reply(comment.id,reply.id)" class="w-5 -mr-4 float-right transform cursor-pointer text-red-500 hover:text-red-700 hover:scale-110" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                     </svg>
@@ -346,27 +361,30 @@
                                 <p v-if="editing_reply!=reply.id" @dblclick="check_editing_reply(reply.id, reply.user_id); editing_reply_text=reply.text" class="text-xs sm:text-sm">
                                     {{reply.text}}
                                 </p>
-                                <textarea v-if="editing_reply===reply.id" v-on:keyup.esc="editing_reply=null; editing_reply_text=null" v-on:keyup.enter="edit_reply(reply.id)" v-model="editing_reply_text" class="w-full"></textarea>
+                                <textarea v-if="editing_reply===reply.id" v-on:keyup.esc="editing_reply=null; editing_reply_text=null" v-on:keyup.enter="edit_reply(reply.id)" v-model="editing_reply_text" class="w-full resize-none h-24"></textarea>
+                                <span v-if="editing_reply===reply.id" @click="editing_reply=null; editing_reply_text=null" class=" text-xs cursor-pointer float-left text-blue-500 font-italic">Cancel</span>
                             </div>
                         </div>
                     </div>
                     </div>
-                        <span v-if="reply_id===comment.id" @click="reply_id=null" class="mt-2 text-sm cursor-pointer float-left text-blue-500 font-italic">Hide replies</span>
-                        <span @click="show_reply(comment.id)" class="mt-2 cursor-pointer text-sm float-right text-blue-500 font-italic">Reply</span>
+                        <span @click="show_reply(comment.id)" class="cursor-pointer -mr-4 text-sm float-right text-blue-500 font-italic">Reply</span>
 
-                    <div @click="show_reply(comment.id)" v-if="comment.replies[0] && reply_id!=comment.id" class="mt-4 cursor-pointer flex items-center">
-                        <div id="reply_images" class="flex -space-x-2 mr-2">
-                            <img :key="reply.id" class="rounded-full w-6 h-6 border border-white" v-for="reply in comment.replies" :src="reply.user.logo ? '/storage/images/profile/'+reply.user.logo : '/storage/images/user.png'" alt="">
+                    <div v-if="comment.replies[0] && reply_id!=comment.id" class="mt-4 flex items-center">
+                        <div @click="show_reply(comment.id)" class="flex cursor-pointer -space-x-2 mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                            </svg>
                         </div>
-                        <div class="text-sm text-gray-500 cursor-pointer font-semibold">
+                        <div @click="show_reply(comment.id)" class="text-sm text-gray-500 cursor-pointer font-semibold">
                             {{ comment.replies.length }} replies
                         </div>
                     </div>
 
                     <div class="mx-auto mt-5" v-if="reply_id===comment.id">
-                        <textarea class="flex-1 w-11/12 outline-black rounded-lg float-right px-4 py-2 sm:px-6 sm:py-4 leading-relaxed my-3 h-24 resize-none" v-on:keyup.enter="add_reply(comment.id)" v-model="reply" placeholder="Leave a reply..."></textarea>
+                        <textarea class="flex-1 w-11/12 outline-black rounded-lg float-left ml-3 px-4 py-2 sm:px-6 sm:py-4 leading-relaxed my-3 h-24 resize-none" v-on:keyup.enter="add_reply(comment.id)" v-model="reply" placeholder="Leave a reply..."></textarea>
                         <button @click="add_reply(comment.id)" class="py-2 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded mb-4 px-4 float-right">ADD</button>
                     </div>
+                    <span v-if="reply_id===comment.id" @click="reply_id=null" class="mt-2 text-sm cursor-pointer float-left text-blue-500 font-italic">Hide replies</span>
                 </div>
             </div>
         </div>
@@ -403,6 +421,8 @@ export default{
             comment:null,
             reply_id:null,
             reply:null,
+            module_name:null,
+            edit_module_name:false,
             module: {
                 name: null,
             },
@@ -427,6 +447,25 @@ export default{
         ])
     },
     methods:{
+        save_module_name(id){
+            axios.post('http://estimate.local/api/edit_module', {
+                module_id: id,
+                name: this.module_name
+            })
+                .then(response => {
+                    let e=this
+                    this.getCurrentProject.modules.findIndex(function (module){
+                        if(module.id===id){
+                            module.name=e.module_name
+                        }
+                    })
+                    this.$toast.success('Module updated!')
+                    this.edit_module_name=false
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
         check_editing_reply(id, user_id){
             if(user_id===this.getUser.id){
                 this.editing_reply=id

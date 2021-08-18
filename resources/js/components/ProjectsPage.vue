@@ -6,8 +6,8 @@
     </div>
 <div class="container flex flex-grow items-center justify-center mx-auto px-4 md:px-12">
 <div id="grid" class="flex w-full flex-wrap relative -mx-1 lg:-mx-4">
-    <div  class="mx-auto" v-if="this.getUser">
-        <div class="px-3 lg:px-4" v-if="this.getUser.role_id===3">
+    <div  class="mx-auto" v-if="this.getUser && this.getUser.role_id===3">
+        <div class="px-3 lg:px-4">
                 <div class="my-3 px-3 lg:my-4 lg:px-4 bg-white max-w-xs shadow-lg mx-auto border-b-4 border-dark rounded-2xl overflow-hidden  hover:shadow-2xl transition duration-500 transform hover:scale-105 cursor-pointer" >
                     <img class="cursor-pointer h-96" @click="modal=true" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/1200px-Plus_symbol.svg.png">
                 </div>
