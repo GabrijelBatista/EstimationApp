@@ -35,6 +35,7 @@
             </span>
                         Sing up
                     </button>
+                    <router-link to="/register" class="mt-4 float-left text-blue-500 font-italic">You already have an account? Click here to sign in!</router-link>
                 </div>
             </form>
         </div>
@@ -43,7 +44,6 @@
 
 <script>
 import { LockClosedIcon } from '@heroicons/vue/solid'
-import axios from 'axios'
 export default {
     components: {
         LockClosedIcon,
@@ -61,8 +61,7 @@ export default {
             e.preventDefault()
             if (this.password.length > 0) {
                 const toast=this.$toast
-                axios.get('http://estimate.local/sanctum/csrf-cookie').then(response => {
-                    axios.post('http://estimate.local/api/register', {
+                    axios.post('http://estimate.local.com/api/register', {
                         name: this.name,
                         email: this.email,
                         password: this.password,
@@ -70,8 +69,9 @@ export default {
                     })
                         .then(response => {
                             if (response.data.success) {
+                                this.$store.commit('setVerifyEmail', this.email)
                                 this.$toast.success(response.data.message);
-                                this.$router.push('/login')
+                                this.$router.push('/verification')
                             } else {
                                 this.$toast.error(response.data.message);
                             }
@@ -79,7 +79,6 @@ export default {
                         .catch(function (error) {
                             toast.error(error.response.data.message);
                         });
-                    });
             }
             else{
                 this.$toast.error('All fields are required.')

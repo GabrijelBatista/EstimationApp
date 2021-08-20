@@ -12,7 +12,8 @@ export default createStore({
         new_notification: false,
         live: false,
         developers: [],
-        pms: []
+        pms: [],
+        verify_email: null
     },
     actions: {
 
@@ -27,6 +28,7 @@ export default createStore({
         getUsers: state => state.users,
         getProjects: state => state.projects,
         getCurrentProject: state => state.current_project,
+        getVerifyEmail: state => state.verify_email,
     },
     mutations: {
         readNotification(state, notification){
@@ -47,6 +49,9 @@ export default createStore({
         },
         setLive(state, live) {
             state.live=live;
+        },
+        setVerifyEmail(state, email) {
+            state.verify_email=email;
         },
         setUser(state, user) {
             state.user=user;

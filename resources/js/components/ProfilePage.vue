@@ -103,7 +103,7 @@ export default {
     },
     methods: {
         delete_logo(){
-            axios.post('http://estimate.local/api/update_profile', {
+            axios.post('http://estimate.local.com/api/update_profile', {
                 delete_image: true,
             })
                 .then(response => {
@@ -130,7 +130,7 @@ export default {
             if(this.password_confirmation) {
                 form.append('password_confirmation', this.password_confirmation);
             }
-            axios.post('http://estimate.local/api/update_profile', form, {
+            axios.post('http://estimate.local.com/api/update_profile', form, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }

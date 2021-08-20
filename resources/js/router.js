@@ -7,9 +7,9 @@ import AddProject from "./components/AddProject.vue";
 
 import Login from "./components/auth/LoginPage.vue";
 import Register from "./components/auth/RegisterPage.vue";
-import RequestToken from "./components/auth/RequestToken.vue";
 import Verification from "./components/auth/VerificationPage.vue";
 import PasswordReset from "./components/auth/PasswordReset.vue";
+import RequestToken from "./components/auth/RequestToken.vue";
 
 
 const routes = [
@@ -22,24 +22,36 @@ const routes = [
           }
       },
     {
+        path: "/request-token",
+        name: "RequestToken",
+        component: RequestToken,
+        meta: {
+            noAuth: true
+        }
+    },
+    {
         path: "/register",
         name: "Register",
         component: Register,
+        meta: {
+            noAuth: true
+        }
     },
     {
         path: "/password-reset",
         name: "PasswordReset",
         component: PasswordReset,
+        meta: {
+            noAuth: true
+        }
     },
     {
         path: "/verification",
         name: "Verification",
         component: Verification,
-    },
-    {
-        path: "/request-token",
-        name: "RequestToken",
-        component: RequestToken,
+        meta: {
+            noAuth: true
+        }
     },
     {
         path: "/",

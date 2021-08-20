@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SendEstimationsNotificationRequest extends FormRequest
+class ResetPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,9 @@ class SendEstimationsNotificationRequest extends FormRequest
     public function rules()
     {
         return [
-            'for' => 'numeric',
-            'body' => 'string|max:250',
-            'url' => 'required'
+            'token' => 'required|string|max:8|min:8',
+            'email' => 'required|string|email|max:50',
+            'password' => 'required|string|min:8|confirmed',
         ];
     }
 }

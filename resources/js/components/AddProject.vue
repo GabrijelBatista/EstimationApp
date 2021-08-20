@@ -448,7 +448,7 @@ export default{
     },
     methods:{
         save_module_name(id){
-            axios.post('http://estimate.local/api/edit_module', {
+            axios.post('http://estimate.local.com/api/edit_module', {
                 module_id: id,
                 name: this.module_name
             })
@@ -472,7 +472,7 @@ export default{
             }
         },
         edit_reply(id){
-            axios.post('http://estimate.local/api/edit_reply', {
+            axios.post('http://estimate.local.com/api/edit_reply', {
                 reply_id: id,
                 text: this.editing_reply_text
             })
@@ -499,7 +499,7 @@ export default{
             }
         },
         edit_comment(id){
-            axios.post('http://estimate.local/api/edit_comment', {
+            axios.post('http://estimate.local.com/api/edit_comment', {
                 comment_id: id,
                 text: this.editing_comment_text
             })
@@ -521,7 +521,7 @@ export default{
         delete_comment(id){
             let e=this
             if (confirm("Delete this comment?") === true) {
-                axios.get('http://estimate.local/api/delete_comment/'+id)
+                axios.get('http://estimate.local.com/api/delete_comment/'+id)
                     .then(response => {
                         this.$toast.success('Comment deleted!')
                         this.getCurrentProject.comments.findIndex(function (comment) {
@@ -541,7 +541,7 @@ export default{
         },
         delete_reply(comment_id, reply_id){
             if (confirm("Delete this reply?") === true) {
-                axios.get('http://estimate.local/api/delete_reply/'+reply_id)
+                axios.get('http://estimate.local.com/api/delete_reply/'+reply_id)
                     .then(response => {
                         this.$toast.success('Reply deleted!')
                         this.getCurrentProject.comments.findIndex(function (comment) {
@@ -563,11 +563,42 @@ export default{
             }
         },
         add_reply(id){
-            axios.post('http://estimate.local/api/add_reply', {
+            let e=this
+            let first=null
+            let second=null
+            let name=this.getUser.name
+            this.getCurrentProject.comments.findIndex(function (comment) {
+                if(id===comment.id){
+                    if(comment.user_id!==e.getUser.id){
+                        first=comment.user_id
+                    }
+                    comment.replies.findIndex(function (reply){
+                        if(first===null && reply.user_id!==e.getUser.id){
+                            first=reply.user_id
+                        }
+                        else if(first!=null && reply.user_id!==e.getUser.id && first!==e.getUser.id){
+                            second=reply.user_id
+                        }
+                    })
+                }
+            })
+            axios.post('http://estimate.local.com/api/add_reply', {
                 comment_id: id,
                 reply: this.reply
             })
                 .then(response => {
+                    axios.post('http://estimate.local.com/api/estimations-notification', {
+                        for: first,
+                        pm: second,
+                        body: name+' replies on your comment for '+this.getCurrentProject.name+' project!',
+                        url: this.getCurrentProject.name
+                    })
+                        .then(response => {
+                            //console.log(response)
+                        })
+                        .catch(function (error) {
+                            console.log(error.data)
+                        });
                     this.$toast.success('Reply posted!')
                     this.reply=null
                     this.getCurrentProject.comments.findIndex(function (comment) {
@@ -590,11 +621,38 @@ export default{
             }
         },
         add_comment(){
-            axios.post('http://estimate.local/api/add_comment', {
+            let first=null
+            let second=null
+            if(this.getUser.id===this.getCurrentProject.assigned_id){
+                 first=this.getCurrentProject.user_id
+                 second=this.getCurrentProject.pm_id
+            }
+            else if(this.getUser.id===this.getCurrentProject.pm_id){
+                 first=this.getCurrentProject.user_id
+                 second=this.getCurrentProject.assigned_id
+            }
+            else if(this.getUser.id===this.getCurrentProject.user_id){
+                 first=this.getCurrentProject.pm_id
+                 second=this.getCurrentProject.assigned_id
+            }
+            let name=this.getUser.name
+            axios.post('http://estimate.local.com/api/add_comment', {
                 project_id: this.getCurrentProject.id,
                 comment: this.comment
             })
                 .then(response => {
+                    axios.post('http://estimate.local.com/api/estimations-notification', {
+                        for: first,
+                        pm: second,
+                        body: name+' commented on '+this.getCurrentProject.name+' project!',
+                        url: this.getCurrentProject.name
+                    })
+                        .then(response => {
+                            //console.log(response)
+                        })
+                        .catch(function (error) {
+                            console.log(error.data)
+                        });
                     this.$toast.success('Comment posted!')
                     this.comment=null
                     this.getCurrentProject.comments.push(response.data)
@@ -624,7 +682,7 @@ export default{
             }
         },
         delete_project(){
-            axios.get('http://estimate.local/api/delete_project/'+this.getCurrentProject.id)
+            axios.get('http://estimate.local.com/api/delete_project/'+this.getCurrentProject.id)
                 .then(response => {
                     this.$toast.success('Project deleted!')
                     this.$router.push('/')
@@ -634,7 +692,7 @@ export default{
                 });
         },
         delete_module(){
-            axios.get('http://estimate.local/api/delete_module/'+this.delete_module_id)
+            axios.get('http://estimate.local.com/api/delete_module/'+this.delete_module_id)
                 .then(response => {
                     this.delete_module_modal=false
                     this.delete_module_id=null
@@ -646,7 +704,7 @@ export default{
                 });
         },
         delete_task(){
-            axios.get('http://estimate.local/api/delete_task/'+this.delete_task_id)
+            axios.get('http://estimate.local.com/api/delete_task/'+this.delete_task_id)
                 .then(response => {
                     this.delete_task_modal=false
                     this.delete_task_id=null
@@ -658,7 +716,7 @@ export default{
                 });
         },
         edit_project_name(){
-            axios.post('http://estimate.local/api/edit_project', {
+            axios.post('http://estimate.local.com/api/edit_project', {
                 project_id: this.getCurrentProject.id,
                 name: this.project_name
             })
@@ -674,13 +732,13 @@ export default{
         },
         change_sent(value){
             if (confirm("Are you sure that you want to status of this project?") === true) {
-                axios.post('http://estimate.local/api/edit_project', {
+                axios.post('http://estimate.local.com/api/edit_project', {
                     project_id: this.getCurrentProject.id,
                     sent: value
                 })
                     .then(response => {
                         if(value===1) {
-                            axios.post('http://estimate.local/api/estimations-notification', {
+                            axios.post('http://estimate.local.com/api/estimations-notification', {
                                 for: response.data.assigned_to.id,
                                 pm: response.data.project_manager.id,
                                 body: 'Estimation for ' + response.data.name + ' project is sent to client!',
@@ -703,14 +761,14 @@ export default{
         },
         change_approved(value){
             if (confirm("Are you sure that you want to status of this project?") === true) {
-                axios.post('http://estimate.local/api/edit_project', {
+                axios.post('http://estimate.local.com/api/edit_project', {
                     project_id: this.getCurrentProject.id,
                     approved: value
                 })
                     .then(response => {
                         console.log(value)
                         if(value===true) {
-                            axios.post('http://estimate.local/api/estimations-notification', {
+                            axios.post('http://estimate.local.com/api/estimations-notification', {
                                 for: response.data.assigned_to.id,
                                 pm: response.data.project_manager.id,
                                 body: 'Estimation for ' + response.data.name + ' project is approved by client!',
@@ -733,13 +791,13 @@ export default{
         },
         change_public(value){
             if (confirm("Are you sure that you want to change status of this project?") === true) {
-                axios.post('http://estimate.local/api/edit_project', {
+                axios.post('http://estimate.local.com/api/edit_project', {
                     project_id: this.getCurrentProject.id,
                     public: value
                 })
                     .then(response => {
                         if(value===1) {
-                            axios.post('http://estimate.local/api/estimations-notification', {
+                            axios.post('http://estimate.local.com/api/estimations-notification', {
                                 for: response.data.author.id,
                                 pm: response.data.project_manager.id,
                                 body: 'Estimation for ' + response.data.name + ' project is done!',
@@ -772,7 +830,7 @@ export default{
         },
         add_module(){
             if(this.module.name) {
-                axios.post('http://estimate.local/api/add_module', {
+                axios.post('http://estimate.local.com/api/add_module', {
                     name: this.module.name,
                     project_id: this.getCurrentProject.id
                 })
@@ -792,7 +850,7 @@ export default{
         },
         add_task(module_id){
             if(this.task.name && this.task.best_case.hours && this.task.best_case.minutes && this.task.worst_case.hours && this.task.worst_case.minutes) {
-                axios.post('http://estimate.local/api/add_task', {
+                axios.post('http://estimate.local.com/api/add_task', {
                     name: this.task.name,
                     best_hours: this.task.best_case.hours,
                     best_minutes: this.task.best_case.minutes,
@@ -841,7 +899,7 @@ export default{
     },
     created(){
         let route_name=useRoute()
-        axios.get('http://estimate.local/api/get_current_project/'+route_name.params.name)
+        axios.get('http://estimate.local.com/api/get_current_project/'+route_name.params.name)
             .then(response => {
                 if(!response.data){
                     this.$router.push('/')

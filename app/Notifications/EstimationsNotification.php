@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -46,8 +45,8 @@ class EstimationsNotification extends Notification implements ShouldBroadcast
         return (new MailMessage)
             ->greeting('Greetings '.$notifiable->name.',')
             ->line($this->estimationData['body'])
-            ->action($this->estimationData['estimationText'], 'http://estimate.local/project/'.$this->estimationData['estimationUrl'])
-            ->line($this->estimationData['thanks']);
+            ->action($this->estimationData['estimationText'], 'http://estimate.local.com/project/'.$this->estimationData['estimationUrl'])
+            ->line($this->estimationData['Thank you!']);
     }
 
     /**

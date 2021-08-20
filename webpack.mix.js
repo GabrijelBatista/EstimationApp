@@ -31,7 +31,7 @@ mix.postCss('resources/css/app.css', 'public/css', [
 ]);
 mix.options({
     hmrOptions: {
-        host: 'estimate.local',  // site's host name
+        host: 'estimate.local.com',  // site's host name
         port: 8080,
     }
 });

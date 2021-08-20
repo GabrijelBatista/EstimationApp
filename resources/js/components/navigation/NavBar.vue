@@ -122,7 +122,7 @@ export default {
         read_notification(id, broadcast){
             let router=this.$router
             let url=null
-            axios.get('http://estimate.local/api/read_notification/'+id)
+            axios.get('http://estimate.local.com/api/read_notification/'+id)
                 .then(response => {
                     this.$store.commit('readNotification', response.data)
                     if(!broadcast) {
@@ -143,7 +143,7 @@ export default {
                             }
                         });
                     }
-                    axios.get('http://estimate.local/api/get_current_project/'+url)
+                    axios.get('http://estimate.local.com/api/get_current_project/'+url)
                         .then(response => {
                             this.$store.commit('setCurrentProject', response.data)
                         })
@@ -156,7 +156,7 @@ export default {
                 });
         },
         logout(){
-            axios.get('http://estimate.local/api/logout')
+            axios.get('http://estimate.local.com/api/logout')
                 .then(response => {
                     this.$toast.success('Logged out!')
                     this.$router.push('/login')
@@ -182,7 +182,9 @@ export default {
         if(this.getUser) {
             Echo.private('App.Models.User.' + this.getUser.id)
                 .notification((notification) => {
-                    this.$store.commit('setUserNotifications', notification)
+                    if(notification.estimation) {
+                            this.$store.commit('setUserNotifications', notification)
+                        }
                 });
             this.$store.commit('setLive', true)
         }

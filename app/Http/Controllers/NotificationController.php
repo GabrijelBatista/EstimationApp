@@ -21,21 +21,23 @@ class NotificationController extends Controller
         $notification = auth()->user()->notifications()->where('id', $id)->first();
 
         if ($notification) {
-            $notification->markAsRead();
+            $notification->delete();
             return response($notification);
         }
     }
 
     public function sendEstimationsNotification(SendEstimationsNotificationRequest $request) {
         $userSchema = User::where('id', $request->for)->orWhere('id', $request->pm)->get();
-        $estimationData =[
-            'body' => $request->body,
-            'thanks' => 'Thank you!',
-            'estimationText' => 'Check it out!',
-            'estimationUrl' => $request->url,
-            'estimation_id' => $request->project.''.$request->body
-        ];
-        Notification::send($userSchema, new EstimationsNotification($estimationData));
+        if($userSchema) {
+            $estimationData = [
+                'body' => $request->body,
+                'thanks' => 'Thank you!',
+                'estimationText' => 'Check it out!',
+                'estimationUrl' => $request->url,
+                'estimation_id' => $request->project . '' . $request->body
+            ];
+            Notification::send($userSchema, new EstimationsNotification($estimationData));
+        }
 
         return response()->json('Notification Sent!');
     }

@@ -38,7 +38,7 @@ return [
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'useTLS' => true,
-                'host' => 'estimate.local',
+                'host' => 'estimate.local.com',
                 'port' => 6001,
                 'scheme' => 'http'
             ],

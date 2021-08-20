@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
+Route::post('reset_password', [UserController::class, 'reset_password']);
+Route::get('verify_token/{token}/{email}', [UserController::class, 'verify_email']);
+Route::get('request_token/{email}', [UserController::class, 'request_token']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
+
     Route::get('get_users', [UserController::class, 'get_users']);
     Route::get('logout', [UserController::class, 'logout']);
 

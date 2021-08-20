@@ -20,7 +20,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role_id'
+        'role_id',
+        'verification_token'
     ];
 
     public function role()
@@ -31,10 +32,6 @@ class User extends Authenticatable
     public function projects()
     {
         return $this->hasMany('App\Models\Project');
-    }
-    public function saved_notifications()
-    {
-        return $this->hasMany('App\Models\SavedNotification');
     }
 
     /**

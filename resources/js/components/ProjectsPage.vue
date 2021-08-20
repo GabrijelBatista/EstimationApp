@@ -13,7 +13,7 @@
                 </div>
         </div>
     </div>
-    <div :key="project.id" class="my-3 px-3 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3" v-for="project in this.getProjects.data">
+    <div :key="project.id" v-if="this.getProjects" class="my-3 px-3 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3" v-for="project in this.getProjects.data">
             <router-link class="hover:no-underline" :to="'/project/'+project.name">
                 <div class="bg-white h-96 max-w-xs mx-auto shadow-lg border-b-4 border-dark rounded-2xl overflow-hidden  hover:shadow-2xl transition duration-500 transform hover:scale-105 cursor-pointer" >
                     <div v-if="!project.sent_notsent && !project.approved_notapproved" :class="project.private_public ? 'bg-indigo-500' : 'bg-gray-500'" class="flex h-14 items-center">
@@ -135,7 +135,7 @@ export default {
     methods: {
         search_projects(){
             if(this.search.length>2) {
-                axios.get('http://estimate.local/api/search/'+this.search)
+                axios.get('http://estimate.local.com/api/search/'+this.search)
                     .then(response => {
                         this.$store.commit('setProjects', response.data)
                     })
@@ -145,13 +145,13 @@ export default {
             }
         },
         add_project(){
-            axios.post('http://estimate.local/api/add_project', {
+            axios.post('http://estimate.local.com/api/add_project', {
                 name: this.name,
                 assigned_to: this.assigned_to,
                 pm: this.pm
             })
                 .then(response => {
-                    axios.get('http://estimate.local/api/get_projects')
+                    axios.get('http://estimate.local.com/api/get_projects')
                         .then(response => {
                             this.$store.commit('setProjects', response.data)
                         })
@@ -160,7 +160,7 @@ export default {
                         });
 
                     if(this.assigned_to!=this.getUser.id) {
-                        axios.post('http://estimate.local/api/estimations-notification', {
+                        axios.post('http://estimate.local.com/api/estimations-notification', {
                             for: this.assigned_to,
                             pm: this.pm,
                             body: 'Project '+this.name+' was assigned to you!',
@@ -185,7 +185,7 @@ export default {
                 });
         },
         get_projects(event){
-            axios.get('http://estimate.local/api/get_projects?page='+event)
+            axios.get('http://estimate.local.com/api/get_projects?page='+event)
                 .then(response => {
                     this.$store.commit('setProjects', response.data)
                 })
@@ -195,7 +195,7 @@ export default {
         },
     },
     created(){
-        axios.get('http://estimate.local/api/get_projects')
+        axios.get('http://estimate.local.com/api/get_projects')
             .then(response => {
                 this.$store.commit('setProjects', response.data)
             })
@@ -203,7 +203,7 @@ export default {
                 console.error(error);
             });
         if(this.getUser.role_id===3 || this.getUser.role_id===2) {
-            axios.get('http://estimate.local/api/get_users')
+            axios.get('http://estimate.local.com/api/get_users')
                 .then(response => {
                     this.$store.commit('setUsers', response.data)
                 })
@@ -216,7 +216,7 @@ export default {
     mounted() {
         const store=this.$store
         document.getElementById("search").addEventListener("search", function(event) {
-            axios.get('http://estimate.local/api/get_projects')
+            axios.get('http://estimate.local.com/api/get_projects')
                 .then(response => {
                     store.commit('setProjects', response.data)
                 })

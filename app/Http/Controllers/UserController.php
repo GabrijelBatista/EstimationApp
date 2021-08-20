@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
+use App\Notifications\TokenNotification;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -24,16 +27,25 @@ class UserController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        User::create([
+        $random=random_int(10000000, 99999999);
+        $user=User::create([
             'name' => $request->name,
             'email' => $request->email,
             'role_id' => 1,
-            'password' => Hash::make($request->password),
+            'verification_token' => $random,
+            'password' => Hash::make($request->password)
         ]);
+
+        $token_data = [
+            'token' => $random,
+        ];
+        Notification::send($user, new TokenNotification($token_data));
+
 
         $response = [
             'success' => true,
-            'message' => 'Account registered!'
+            'message' => 'Account registered!',
+            'email' => $request->email
         ];
 
         return response()->json($response);
@@ -100,25 +112,45 @@ class UserController extends Controller
             'password' => $request->password,
         ];
 
-        if (Auth::attempt($credentials)) {
-            $success = true;
-            $message = 'Logged in!';
-        } else {
-            $success = false;
-            $message = 'Wrong credentials!';
-        }
+            if (Auth::attempt($credentials)) {
+                $success = true;
+                $message = 'Logged in!';
+                $not_verified=false;
+                $user=Auth::user();
+                    if($user->email_verified_at) {
+                        $user->date = $user->created_at->format("d. M Y.");
+                        $user->title = $user->role->name;
+                        $user->unreadNotifications->sortByDesc('created_at');
+                    }
+                    else{
+                        $success = false;
+                        $message = 'Email not verified!';
+                        $not_verified=true;
 
-        $user=Auth::user();
-        if($user)
-        {
-            $user->date = $user->created_at->format("d. M Y.");
-            $user->title = $user->role->name;
-            $user->unreadNotifications->sortByDesc('created_at');
-        }
+                        $random=random_int(10000000, 99999999);
+                        $user=Auth::user();
+                        $user->verification_token=$random;
+                        $user->save();
+                        $token_data = [
+                            'token' => $random,
+                        ];
+                        Notification::send($user, new TokenNotification($token_data));
+
+                        $user = null;
+                    }
+            }
+            else {
+                $success = false;
+                $message = 'Wrong credentials!';
+                $not_verified=false;
+                $user=null;
+            }
+
         $response = [
             'success' => $success,
             'message' => $message,
-            'user' => $user
+            'user' => $user,
+            'not_verified' => $not_verified
         ];
         return response()->json($response);
     }
@@ -145,5 +177,76 @@ class UserController extends Controller
         ];
         return response()->json($response);
     }
+
+    public function verify_email($token, $email){
+        $user=User::where('email', $email)->first();
+        if($user->verification_token===$token){
+            $user->email_verified_at=time();
+            $user->verification_token=null;
+            $user->save();
+            $response = [
+                'success' => true,
+                'message' => 'Email verified!',
+            ];
+            return response()->json($response);
+        }
+
+            $response = [
+                'success' => false,
+                'message' => 'Incorrect verification code!',
+            ];
+            return response()->json($response);
+
+    }
+
+    public function request_token($email){
+        $user=User::where('email', $email)->first();
+        if($user && $user->email_verified_at){
+            $random=random_int(10000000, 99999999);
+            $user->verification_token=$random;
+            $user->save();
+            $token_data = [
+                'token' => $random,
+            ];
+            Notification::send($user, new TokenNotification($token_data));
+
+            $response = [
+                'success' => true,
+                'message' => 'Verification code was sent to your email!',
+                'email' => $email
+            ];
+
+            return response()->json($response);
+        }
+
+            $response = [
+                'success' => false,
+                'message' => 'Your email is not verified!',
+            ];
+            return response()->json($response);
+
+    }
+
+    public function reset_password(ResetPasswordRequest $request){
+        $user=User::where('email', $request->email)->first();
+        if($user && $request->token===$user->verification_token){
+            $user->verification_token=null;
+            $user->password=Hash::make($request->password);
+            $user->save();
+
+            $response = [
+                'success' => true,
+                'message' => 'Password changed!',
+            ];
+
+            return response()->json($response);
+        }
+
+            $response = [
+                'success' => false,
+                'message' => 'Incorrect verification code!',
+            ];
+            return response()->json($response);
+        }
 
 }
