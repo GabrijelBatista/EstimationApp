@@ -17,7 +17,7 @@ class UserController extends Controller
 {
     public function get_users()
     {
-        $users=User::get()->all();
+        $users=User::whereNotNull('email_verified_at')->get();
         foreach($users as $user){
             $user->title=$user->role->name;
         }
@@ -96,10 +96,31 @@ class UserController extends Controller
         }
         $user->save();
         $user->date=$user->created_at->format("d. M Y.");
+
+       /* $totalBrightness = 0;
+        $im = imagecreatefrompng(public_path() . '/storage/images/profile/' . $filenameWithExt);
+        $width = imagesx($im);
+        $height = imagesy($im);
+        for ($x = 0; $x < $width; $x++) {
+            for ($y = 0; $y < $height; $y++) {
+                $rgb = imagecolorat($im, $x, $y);
+
+                $red = ($rgb >> 16) & 0xFF;
+                $green = ($rgb >> 8) & 0xFF;
+                $blue = $rgb & 0xFF;
+
+                $totalBrightness += (max($red, $green, $blue) + min($red, $green, $blue)) / 2;
+            }
+        }
+
+        $test= ($totalBrightness / ($width * $height)) / 2.55;
+*/
+
         $response = [
             'success' => true,
             'message' => 'Profile updated!',
             'user' => $user,
+            //'test' => $test
         ];
 
         return response()->json($response);

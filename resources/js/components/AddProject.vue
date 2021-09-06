@@ -30,7 +30,7 @@
                     <div class="inline-block">
                         <div class="inline-block" v-if="!edit_module_name">{{ value.name }}</div>
                         <input class="inline-block text-black text-center font-medium" v-if="edit_module_name" v-model="module_name" v-on:keyup.enter="save_module_name(value.id)">
-                        <svg v-if="this.getUser.id===this.getCurrentProject.assigned_id" @click="edit_module_name=!edit_module_name; module_name=value.name" xmlns="http://www.w3.org/2000/svg" class="inline-block cursor-pointer ml-2 text-yellow-500 transform hover:scale-110 hover:text-yellow-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg v-if="this.getUser.id===this.getCurrentProject.assigned_id && !pdf" @click="edit_module_name=!edit_module_name; module_name=value.name" xmlns="http://www.w3.org/2000/svg" class="inline-block cursor-pointer ml-2 text-yellow-500 transform hover:scale-110 hover:text-yellow-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                         </svg>
                     </div>
@@ -50,7 +50,7 @@
                     <th class="py-3 px-6 text-blue-600 text-center">AVERAGE</th>
                     <th class="py-3 px-6 text-red-600 text-center">WORST CASE</th>
                     <th class="py-3 px-6 text-center">
-                        <svg v-if="this.getUser.id===this.getCurrentProject.assigned_id" @click="edit_module(value.id)" xmlns="http://www.w3.org/2000/svg" class="inline-block cursor-pointer text-yellow-500 transform hover:scale-110 hover:text-yellow-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg v-if="this.getUser.id===this.getCurrentProject.assigned_id && !pdf" @click="edit_module(value.id)" xmlns="http://www.w3.org/2000/svg" class="inline-block cursor-pointer text-yellow-500 transform hover:scale-110 hover:text-yellow-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                         </svg>
                     </th>
@@ -117,7 +117,7 @@
                     </td>
                     <td class="py-3 px-6 text-center">
                         <div class="flex mx-auto w-36 items-center">
-                            <input id="task_worst_hours" v-on:keyup.enter="nextPlease(value.id)" v-model="task.worst_case.hours" type="number" min="0" required class="text-center appearance-none mr-1 rounded-none relative block w-full px-1 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="h" />
+                            <input id="task_worst_hours" v-on:keyup.enter="nextPlease(value.id)" v-model="task.worst_case.hours" type="number" min="0" required class="text-center appearance-none mr-1 rounded-none relative block w-full px-1 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="h" />:
                             <input id="task_worst_minutes" v-on:keyup.enter="nextPlease(value.id)" v-model="task.worst_case.minutes" type="number" min="0" max="59" required class="text-center appearance-none ml-1 rounded-none relative block w-full px-1 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="m" />
                         </div>
                     </td>
@@ -227,13 +227,13 @@
             <div class="ml-2 text-lg inline-block">{{ this.getCurrentProject.assigned_to.name }}</div>
         </div>
         <div class="ml-5 mb-2 flex font-extrabold text-3xl leading-normal">
-            <div class="ml-2 mr-4 text-lg inline-block">PM: </div>
+            <div class="ml-2 mr-4 text-lg inline-block">Dev: </div>
             <img v-if="this.getCurrentProject.pm.logo && !pdf" class="inline-block h-6 w-6 rounded-full" :src="'/storage/images/profile/'+this.getCurrentProject.pm.logo" alt="" >
             <img v-if="!this.getCurrentProject.pm.logo && !pdf" class="inline-block h-6 w-6 rounded-full" src="/storage/images/user.png" alt="" />
             <div class="ml-2 text-lg inline-block">{{ this.getCurrentProject.pm.name }}</div>
         </div>
     <div class="ml-5 mb-2 flex font-extrabold text-3xl leading-normal">
-        <div class="ml-2 mr-4 text-lg inline-block">Author: </div>
+        <div class="ml-2 mr-4 text-lg inline-block">PM: </div>
         <img v-if="this.getCurrentProject.author.logo && !pdf" class="inline-block h-6 w-6 rounded-full" :src="'/storage/images/profile/'+this.getCurrentProject.author.logo" alt="" >
         <img v-if="!this.getCurrentProject.author.logo && !pdf" class="inline-block h-6 w-6 rounded-full" src="/storage/images/user.png" alt="" />
         <div class="ml-2 text-lg inline-block">{{ this.getCurrentProject.author.name }}</div>
@@ -849,7 +849,6 @@ export default{
             }
         },
         add_task(module_id){
-            if(this.task.name && this.task.best_case.hours && this.task.best_case.minutes && this.task.worst_case.hours && this.task.worst_case.minutes) {
                 axios.post('http://estimate.local.com/api/add_task', {
                     name: this.task.name,
                     best_hours: this.task.best_case.hours,
@@ -873,10 +872,6 @@ export default{
                     .catch(function (error) {
                         console.log(error);
                     });
-            }
-            else{
-                this.$toast.error('All fields are required!')
-            }
         },
         async save_pdf(){
             let name=this.getCurrentProject.name

@@ -183,8 +183,16 @@ class ProjectController extends Controller
         public function add_task(AddTaskRequest $request){
         $hours=$request->best_hours+$request->worst_hours;
         $minutes=$request->best_minutes+$request->worst_minutes;
-        $average_hours=$hours/2;
+        $average_hours=round( (float)$hours/2, 2);
+        $whole=floor($average_hours);
         $average_minutes=$minutes/2;
+        $average_minutes+=($average_hours-$whole)*60;
+        $average_hours=$whole;
+        while($average_minutes>59){
+            $average_hours++;
+            $average_minutes-=60;
+        }
+
             Task::create([
                 'name' => $request->name,
                 'module_id' => $request->module_id,
@@ -219,8 +227,15 @@ class ProjectController extends Controller
             }
             $module_hours=$module_best_hours+$module_worst_hours;
             $module_minutes=$module_best_minutes+$module_worst_minutes;
-            $module_average_hours=$module_hours/2;
+            $module_average_hours=round( (float)$module_hours/2, 2);
+            $module_whole=floor($module_average_hours);
             $module_average_minutes=$module_minutes/2;
+            $module_average_minutes+=($module_average_hours-$module_whole)*60;
+            $module_average_hours=$module_whole;
+            while($module_average_minutes>59){
+                $module_average_hours++;
+                $module_average_minutes-=60;
+            }
 
             $module->average_hours=$module_average_hours;
             $module->average_minutes=$module_average_minutes;
@@ -236,11 +251,15 @@ class ProjectController extends Controller
             $project_best_minutes=0;
             $project_worst_hours=0;
             $project_worst_minutes=0;
+            $project_average_hours=0;
+            $project_average_minutes=0;
             foreach($project_modules as $mod){
                 $project_best_hours+=$mod->best_hours;
                 $project_best_minutes+=$mod->best_minutes;
                 $project_worst_hours+=$mod->worst_hours;
                 $project_worst_minutes+=$mod->worst_minutes;
+                $project_average_hours+=$mod->average_hours;
+                $project_average_minutes+=$mod->average_minutes;
             }
             while($project_best_minutes>59){
                 $project_best_hours++;
@@ -250,10 +269,10 @@ class ProjectController extends Controller
                 $project_worst_hours++;
                 $project_worst_minutes-=60;
             }
-            $project_hours=$project_best_hours+$project_worst_hours;
-            $project_minutes=$project_best_minutes+$project_worst_minutes;
-            $project_average_hours=$project_hours/2;
-            $project_average_minutes=$project_minutes/2;
+            while($project_average_minutes>59){
+                $project_average_hours++;
+                $project_average_minutes-=60;
+            }
 
             $project->average_hours=round($project_average_hours);
             $project->average_minutes=round($project_average_minutes);
@@ -315,8 +334,15 @@ class ProjectController extends Controller
                 }
                 $module_hours=$module_best_hours+$module_worst_hours;
                 $module_minutes=$module_best_minutes+$module_worst_minutes;
-                $module_average_hours=$module_hours/2;
+                $module_average_hours=round( (float)$module_hours/2, 2);
+                $module_whole=floor($module_average_hours);
                 $module_average_minutes=$module_minutes/2;
+                $module_average_minutes+=($module_average_hours-$module_whole)*60;
+                $module_average_hours=$module_whole;
+                while($module_average_minutes>59){
+                    $module_average_hours++;
+                    $module_average_minutes-=60;
+                }
 
                 $module->average_hours=$module_average_hours;
                 $module->average_minutes=$module_average_minutes;
@@ -331,11 +357,15 @@ class ProjectController extends Controller
                 $project_best_minutes=0;
                 $project_worst_hours=0;
                 $project_worst_minutes=0;
+                $project_average_hours=0;
+                $project_average_minutes=0;
                 foreach($project_modules as $mod){
                     $project_best_hours+=$mod->best_hours;
                     $project_best_minutes+=$mod->best_minutes;
                     $project_worst_hours+=$mod->worst_hours;
                     $project_worst_minutes+=$mod->worst_minutes;
+                    $project_average_hours+=$mod->average_hours;
+                    $project_average_minutes+=$mod->average_minutes;
                 }
                 while($project_best_minutes>59){
                     $project_best_hours++;
@@ -345,10 +375,10 @@ class ProjectController extends Controller
                     $project_worst_hours++;
                     $project_worst_minutes-=60;
                 }
-                $project_hours=$project_best_hours+$project_worst_hours;
-                $project_minutes=$project_best_minutes+$project_worst_minutes;
-                $project_average_hours=$project_hours/2;
-                $project_average_minutes=$project_minutes/2;
+                while($project_average_minutes>59){
+                    $project_average_hours++;
+                    $project_average_minutes-=60;
+                }
 
                 $project->average_hours=$project_average_hours;
                 $project->average_minutes=$project_average_minutes;
@@ -395,11 +425,15 @@ class ProjectController extends Controller
                 $project_best_minutes=0;
                 $project_worst_hours=0;
                 $project_worst_minutes=0;
+                $project_average_hours=0;
+                $project_average_minutes=0;
                 foreach($project_modules as $mod){
                     $project_best_hours+=$mod->best_hours;
                     $project_best_minutes+=$mod->best_minutes;
                     $project_worst_hours+=$mod->worst_hours;
                     $project_worst_minutes+=$mod->worst_minutes;
+                    $project_average_hours+=$mod->average_hours;
+                    $project_average_minutes+=$mod->average_minutes;
                 }
                 while($project_best_minutes>59){
                     $project_best_hours++;
@@ -409,11 +443,10 @@ class ProjectController extends Controller
                     $project_worst_hours++;
                     $project_worst_minutes-=60;
                 }
-                $project_hours=$project_best_hours+$project_worst_hours;
-                $project_minutes=$project_best_minutes+$project_worst_minutes;
-                $project_average_hours=$project_hours/2;
-                $project_average_minutes=$project_minutes/2;
-
+                while($project_average_minutes>59){
+                    $project_average_hours++;
+                    $project_average_minutes-=60;
+                }
                 $project->average_hours=$project_average_hours;
                 $project->average_minutes=$project_average_minutes;
                 $project->best_hours=$project_best_hours;

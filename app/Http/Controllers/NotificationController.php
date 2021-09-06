@@ -19,11 +19,9 @@ class NotificationController extends Controller
     }
     public function read_notification($id){
         $notification = auth()->user()->notifications()->where('id', $id)->first();
+        $notification->markAsRead();
 
-        if ($notification) {
-            $notification->delete();
             return response($notification);
-        }
     }
 
     public function sendEstimationsNotification(SendEstimationsNotificationRequest $request) {

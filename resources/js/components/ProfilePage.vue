@@ -136,6 +136,7 @@ export default {
                 }
             })
                     .then(response => {
+                        console.log(response.data)
                         this.name = null
                         this.password = null
                         this.password_confirmation = null
