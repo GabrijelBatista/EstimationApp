@@ -8,8 +8,40 @@ module.exports = {
             backgroundImage: theme => ({
                 //'hero-lg': "url('https://gmcgregor.ca/static/06d3383234b0e417b49e7ce29ec7d073/2b872/image-918.jpg')",
             }),
-            animation: {
-                //'bounce-custom': 'bounce 1.5s linear',
+            colors: {
+                'white': '#ffffff',
+                'gray-lightest': '#f9f8f8',
+                'gray-lighter': '#e5e4e5',
+                'gray-light': '#d1d0d1',
+                'gray': '#bebdbe',
+                'gray-dark': '#979697',
+                'gray-darker': '#6f6e6f',
+                'gray-darkest': '#484848',
+                'black': '#212021',
+
+                'brand-light': '#d9c5d7',
+                'brand': '#671e67',
+                'brand-dark': '#351634',
+
+                'cta-light': '#cfd7c3',
+                'cta': '#43671e',
+                'cta-dark': '#253415',
+
+                'info-light': '#dbedf7',
+                'info': '#5bb7df',
+                'info-dark': '#335869',
+
+                'warning-light': '#fdeccf',
+                'warning': '#FFA500',
+                'warning-dark': '#FF8C00',
+
+                'success-light': '#daf1d4',
+                'success': '#5ec554',
+                'success-dark': '#335e2d',
+
+                'danger-light': '#ffd0cf',
+                'danger': '#e12e4d',
+                'danger-dark': '#6c2128',
             }
         },
     },

@@ -1,6 +1,6 @@
 <template>
   <NavBar class="shadow-2xl mb-20 rounded-b-3xl sticky z-50 inset-x-0 shadow-xl min-w-full lg:mx-auto top-0 "/>
-    <router-view v-slot="{ Component }" class="-mt-16 bg-hero-lg bg-cover bg-fixed">
+    <router-view v-slot="{ Component }" class="-mt-16 bg-cta-light bg-hero-lg bg-cover bg-fixed">
       <transition name="slide-fade" mode="out-in">
         <component :is="Component" />
       </transition>
@@ -17,12 +17,16 @@ export default{
 </script>
 
 <style>
+html{
+    background-color: #cfd7c3;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+    background-color: #cfd7c3;
 }
 .slide-fade-enter-active {
     transition: all 0.5s ease-out;

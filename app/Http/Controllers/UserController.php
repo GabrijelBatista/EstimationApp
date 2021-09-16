@@ -6,7 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
-use App\Notifications\TokenNotification;
+use App\Notifications\VerificationCode;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
@@ -39,7 +39,7 @@ class UserController extends Controller
         $token_data = [
             'token' => $random,
         ];
-        Notification::send($user, new TokenNotification($token_data));
+        Notification::send($user, new VerificationCode($token_data));
 
 
         $response = [
@@ -155,7 +155,7 @@ class UserController extends Controller
                         $token_data = [
                             'token' => $random,
                         ];
-                        Notification::send($user, new TokenNotification($token_data));
+                        Notification::send($user, new VerificationCode($token_data));
 
                         $user = null;
                     }
@@ -229,7 +229,7 @@ class UserController extends Controller
             $token_data = [
                 'token' => $random,
             ];
-            Notification::send($user, new TokenNotification($token_data));
+            Notification::send($user, new VerificationCode($token_data));
 
             $response = [
                 'success' => true,

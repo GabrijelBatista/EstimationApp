@@ -44,14 +44,14 @@
             <div v-if="modal" class="fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-gray-700 bg-opacity-75 flex flex-col items-center justify-center">
                 <div class="w-full md:w-1/3 items-center p-6 space-x-6 bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-500">
                     <div class="font-extrabold mx-auto text-2xl mb-4">UPDATE PROFILE</div>
-                        <input v-model="name" type="text" required class="text-center mb-2 py-3 mx-auto appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="New Name" />
-                        <input v-model="password" type="password" required class="text-center mb-2 py-3 mx-auto appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="New Password" />
-                        <input v-model="password_confirmation" type="password" required class="text-center mb-2 py-3 mx-auto appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password Confirmation" />
+                        <input v-model="name" type="text" required class="text-center mb-2 py-3 mx-auto appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="New Name" />
+                        <input v-model="password" type="password" required class="text-center mb-2 py-3 mx-auto appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="New Password" />
+                        <input v-model="password_confirmation" type="password" required class="text-center mb-2 py-3 mx-auto appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="Password Confirmation" />
                     <div class="block">
                         <div @click="cancel" class="inline-block bg-gray-600 px-4 float-left mt-4 mx-auto py-2 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
                             <span>Cancel</span>
                         </div>
-                        <div @click="update_profile" class="inline-block bg-indigo-600 px-4 float-right mt-4 mx-auto my-2 py-2 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
+                        <div @click="update_profile" class="inline-block bg-purple-600 px-4 float-right mt-4 mx-auto my-2 py-2 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
                             <span>Save</span>
                         </div>
                     </div>
@@ -136,7 +136,6 @@ export default {
                 }
             })
                     .then(response => {
-                        console.log(response.data)
                         this.name = null
                         this.password = null
                         this.password_confirmation = null

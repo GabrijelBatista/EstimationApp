@@ -39591,7 +39591,7 @@ var _hoisted_2 = {
   "class": "max-w-md space-y-8"
 };
 
-var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <img class=\"mx-auto h-12 w-auto\" src=\"https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg\" alt=\"Workflow\" /> "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("h2", {
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <img class=\"mx-auto h-12 w-auto\" src=\"https://tailwindui.com/img/logos/workflow-mark-purple-600.svg\" alt=\"Workflow\" /> "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("h2", {
   "class": "mt-6 text-center text-3xl font-extrabold text-gray-900"
 }, " Sign in to your account ")], -1
 /* HOISTED */
@@ -39648,7 +39648,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     type: "email",
     autocomplete: "email",
     required: "",
-    "class": "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm",
+    "class": "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm",
     placeholder: "Email address"
   }, null, 512
   /* NEED_PATCH */
@@ -39660,7 +39660,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     type: "password",
     autocomplete: "current-password",
     required: "",
-    "class": "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm",
+    "class": "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm",
     placeholder: "Password"
   }, null, 512
   /* NEED_PATCH */
@@ -39669,9 +39669,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $options.handleSubmit && $options.handleSubmit.apply($options, arguments);
     }),
     type: "submit",
-    "class": "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    "class": "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-brand focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("span", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_LockClosedIcon, {
-    "class": "h-5 w-5 text-indigo-500 group-hover:text-indigo-400",
+    "class": "h-5 w-5 text-purple-500 group-hover:text-purple-400",
     "aria-hidden": "true"
   })]), _hoisted_10])])])])]);
 }
@@ -40010,11 +40010,11 @@ var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("
   "class": "flex-shrink-0 flex items-center"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("img", {
   "class": "hidden md:block lg:hidden h-8 w-auto",
-  src: "https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg",
+  src: "https://tailwindui.com/img/logos/workflow-mark-purple-500.svg",
   alt: "Workflow"
 }), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("img", {
   "class": "hidden lg:block h-8 w-auto",
-  src: "https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg",
+  src: "https://tailwindui.com/img/logos/workflow-logo-purple-500-mark-white-text.svg",
   alt: "Workflow"
 })], -1
 /* HOISTED */
@@ -40045,7 +40045,7 @@ var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(
 
 var _hoisted_11 = {
   key: 0,
-  "class": "absolute bg-indigo-500 text-white mt-1 rounded z-10 shadow-lg w-40 max-w-xs"
+  "class": "absolute bg-purple-500 text-white mt-1 rounded z-10 shadow-lg w-40 max-w-xs"
 };
 var _hoisted_12 = {
   "class": "list-none overflow-hidden rounded"
@@ -40055,7 +40055,7 @@ var _hoisted_13 = {
 };
 
 var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", {
-  "class": "transition duration-300 ease-in-out hover:bg-blue-600 bg-indigo-500 text-white font-bold py-2 px-4 rounded"
+  "class": "transition duration-300 ease-in-out hover:bg-blue-600 bg-purple-500 text-white font-bold py-2 px-4 rounded"
 }, " About ", -1
 /* HOISTED */
 );
@@ -40195,7 +40195,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onClick: function onClick($event) {
             return val.show = !val.show;
           },
-          "class": [val.show ? 'bg-gray-800' : '', "transition duration-300 ease-in-out hover:bg-blue-600 bg-indigo-500 text-white font-bold py-2 px-4 whitespace-no-wrap rounded transition duration-300"]
+          "class": [val.show ? 'bg-gray-800' : '', "transition duration-300 ease-in-out hover:bg-blue-600 bg-purple-500 text-white font-bold py-2 px-4 whitespace-no-wrap rounded transition duration-300"]
         }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(index) + " ", 1
         /* TEXT */
         ), _hoisted_10], 10
@@ -40209,7 +40209,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             return [val.show ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("ul", _hoisted_12, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(val.items, function (category) {
               return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
                 to: "/article",
-                "class": "hover:no-underline hover:text-white transition duration-300 ease-in-out hover:bg-blue-600 flex py-2 px-4 transition duration-300 theme-indigo"
+                "class": "hover:no-underline hover:text-white transition duration-300 ease-in-out hover:bg-blue-600 flex py-2 px-4 transition duration-300 theme-purple"
               }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                   return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(category), 1

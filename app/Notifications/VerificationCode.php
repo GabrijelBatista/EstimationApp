@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class TokenNotification extends Notification
+class VerificationCode extends Notification
 {
     use Queueable;
     private array $token_data;

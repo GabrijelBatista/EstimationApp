@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SendEstimationsNotificationRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\EstimationsNotification;
+use App\Notifications\NewProject;
 
 class NotificationController extends Controller
 {
@@ -34,7 +34,7 @@ class NotificationController extends Controller
                 'estimationUrl' => $request->url,
                 'estimation_id' => $request->project . '' . $request->body
             ];
-            Notification::send($userSchema, new EstimationsNotification($estimationData));
+            Notification::send($userSchema, new NewProject($estimationData));
         }
 
         return response()->json('Notification Sent!');

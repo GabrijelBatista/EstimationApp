@@ -8,7 +8,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class EstimationsNotification extends Notification implements ShouldBroadcast
+class NewProject extends Notification implements ShouldBroadcast
 {
     use Queueable;
     private array $estimationData;
