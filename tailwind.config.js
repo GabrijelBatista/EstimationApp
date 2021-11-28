@@ -19,13 +19,13 @@ module.exports = {
                 'gray-darkest': '#484848',
                 'black': '#212021',
 
-                'brand-light': '#d9c5d7',
-                'brand': '#671e67',
-                'brand-dark': '#351634',
+                'brand': '#343a40',
+                'brand-light': '#f8f9fa',
+                'brand-dark': '#212529',
 
-                'cta-light': '#cfd7c3',
-                'cta': '#43671e',
-                'cta-dark': '#253415',
+                'cta': '#e9ecef',
+                'cta-light': '#e9f5db',
+                'cta-dark': '#dee2e6',
 
                 'info-light': '#dbedf7',
                 'info': '#5bb7df',

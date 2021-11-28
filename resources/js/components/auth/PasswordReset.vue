@@ -11,15 +11,15 @@
                     <div>
                         <label for="token" class="sr-only">Verification Code</label>
                         <span class="text-xs font-italic">Verification code was sent to your email.</span>
-                        <input v-model="token" id="token" name="token" type="token" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-brand-light placeholder-brand text-brand-dark rounded-b-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="Verification Code" />
+                        <input v-model="token" id="token" name="token" type="token" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-brand-light placeholder-brand text-black rounded-b-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="Verification Code" />
                     </div>
                     <div>
                         <label for="password" class="sr-only">Password</label>
-                        <input v-model="password" id="password" name="password" type="password" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-brand-light placeholder-brand text-brand-dark rounded-b-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="New Password" />
+                        <input v-model="password" id="password" name="password" type="password" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-brand-light placeholder-brand text-black rounded-b-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="New Password" />
                     </div>
                     <div>
                         <label for="password_confirmation" class="sr-only">Password</label>
-                        <input v-model="password_confirmation" id="password_confirmation" name="password_confirmation" type="password" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-brand-light placeholder-brand text-brand-dark rounded-b-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="Confirm Password" />
+                        <input v-model="password_confirmation" id="password_confirmation" name="password_confirmation" type="password" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-brand-light placeholder-brand text-white rounded-b-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="Confirm Password" />
                     </div>
                 </div>
                 <div>

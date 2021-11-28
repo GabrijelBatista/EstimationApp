@@ -10,11 +10,11 @@
             <div class="rounded-md shadow-sm -space-y-px">
                 <div>
                     <label for="token" class="sr-only">Email</label>
-                    <input id="token" v-model="email" name="token" type="text" required="" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-brand-light placeholder-brand text-brand-dark rounded-t-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="Email" />
+                    <input id="token" v-model="email" name="token" type="text" required="" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-brand-light placeholder-brand text-black rounded-t-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="Email" />
                 </div>
             </div>
             <div>
-                <button @click="request_token" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand hover:bg-brand focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand">
+                <button @click="request_token" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand hover:bg-brand focus:outline-none focus:ring-2 focus:ring-offset-2 hover:bg-brand-dark focus:ring-brand">
                     Confirm
                 </button>
             </div>

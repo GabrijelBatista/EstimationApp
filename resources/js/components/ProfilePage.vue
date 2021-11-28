@@ -9,11 +9,11 @@
                     <img v-if="!this.getUser.logo" class="h-80 z-40 w-80 block rounded-full mx-auto"
                          src="/storage/images/user.png"
                          alt="">
-                    <svg v-if="!this.getUser.logo" @click="select_image" xmlns="http://www.w3.org/2000/svg" class="h-80 bg-dark text-white opacity-0 z-50 hover:opacity-70 absolute top-0 w-80 cursor-pointer rounded-full mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg v-if="!this.getUser.logo" @click="select_image" xmlns="http://www.w3.org/2000/svg" class="h-80 bg-dark text-black opacity-0 z-50 hover:opacity-70 absolute top-0 w-80 cursor-pointer rounded-full mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    <div v-if="this.getUser.logo" class="h-80 bg-dark text-white opacity-0 z-50 hover:opacity-70 absolute top-0 p-32 w-80 rounded-full mx-auto">
+                    <div v-if="this.getUser.logo" class="h-80 bg-dark text-black opacity-0 z-50 hover:opacity-70 absolute top-0 p-32 w-80 rounded-full mx-auto">
                         <svg @click="select_image" xmlns="http://www.w3.org/2000/svg" class="inline-block mx-auto text-yellow-500 hover:text-yellow-700 cursor-pointer w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                         </svg>
@@ -48,10 +48,10 @@
                         <input v-model="password" type="password" required class="text-center mb-2 py-3 mx-auto appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="New Password" />
                         <input v-model="password_confirmation" type="password" required class="text-center mb-2 py-3 mx-auto appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="Password Confirmation" />
                     <div class="block">
-                        <div @click="cancel" class="inline-block bg-gray-600 px-4 float-left mt-4 mx-auto py-2 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
+                        <div @click="cancel" class="inline-block bg-gray-600 px-4 float-left mt-4 mx-auto py-2 text-black font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
                             <span>Cancel</span>
                         </div>
-                        <div @click="update_profile" class="inline-block bg-purple-600 px-4 float-right mt-4 mx-auto my-2 py-2 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
+                        <div @click="update_profile" class="inline-block bg-purple-600 px-4 float-right mt-4 mx-auto my-2 py-2 text-black font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
                             <span>Save</span>
                         </div>
                     </div>
@@ -70,10 +70,10 @@
                         <p class="text-sm text-gray-500 px-8">Do you really want to delete your profile photo?</p>
                     </div>
                     <div class="block">
-                        <div @click="cancel" class="inline-block bg-gray-600 px-4 float-left mt-4 mx-auto py-2 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
+                        <div @click="cancel" class="inline-block bg-gray-600 px-4 float-left mt-4 mx-auto py-2 text-black font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
                             <span>Cancel</span>
                         </div>
-                        <div @click="delete_logo" class="inline-block bg-red-600 px-4 float-right mt-4 mx-auto my-2 py-2 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
+                        <div @click="delete_logo" class="inline-block bg-red-600 px-4 float-right mt-4 mx-auto my-2 py-2 text-black font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
                             <span>Delete</span>
                         </div>
                     </div>

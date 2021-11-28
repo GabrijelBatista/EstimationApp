@@ -1,5 +1,5 @@
 <template>
-<div id="pdf" class=" bg-cta-light text-brand-dark overflow-x-auto" ref="content">
+<div id="pdf" class=" bg-cta-light text-black overflow-x-auto" ref="content">
     <button v-if="!pdf" @click="save_pdf(pdf=true)" class="absolute top-30 right-2">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -8,7 +8,7 @@
 <div class="min-w-screen min-h-scree flex justify-center font-sans overflow-hidden">
     <div class="w-full lg:w-5/6">
             <div class="flex m-auto w-max">
-                <div v-if="this.getUser && this.getCurrentProject" class="p-5 font-extrabold text-brand-dark uppercase text-3xl leading-normal">{{ this.getCurrentProject.name }}
+                <div v-if="this.getUser && this.getCurrentProject" class="p-5 font-extrabold text-black uppercase text-3xl leading-normal">{{ this.getCurrentProject.name }}
                     <svg @click="project_name_modal=true" v-if="this.getCurrentProject.author.id===this.getUser.id && !pdf" xmlns="http://www.w3.org/2000/svg" class="inline-block cursor-pointer text-yellow-500 transform hover:scale-110 hover:text-yellow-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
@@ -29,7 +29,7 @@
                     </div>
                     <div class="inline-block">
                         <div class="inline-block" v-if="edit_module_name!=value.name">{{ value.name }}</div>
-                        <input class="inline-block text-brand-dark text-center font-medium" v-if="edit_module_name===value.name" v-model="module_name" v-on:keyup.enter="save_module_name(value.id)">
+                        <input class="inline-block text-black text-center font-medium" v-if="edit_module_name===value.name" v-model="module_name" v-on:keyup.enter="save_module_name(value.id)">
                         <svg v-if="this.getUser.id===this.getCurrentProject.assigned_id && !pdf" @click="open_edit_module_name(value.name)" xmlns="http://www.w3.org/2000/svg" class="inline-block cursor-pointer ml-2 text-yellow-500 transform hover:scale-110 hover:text-yellow-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                         </svg>
@@ -43,10 +43,10 @@
             </div>
             <table class="min-w-max w-full bg-brand-light">
                 <thead class="bg-brand">
-                <tr class="text-white text-sm leading-normal">
-                    <th class="py-3 px-6 text-left">No.</th>
-                    <th class="py-3 px-6 text-left">TASK</th>
-                    <th class="py-3 px-6 text-cta text-center">BEST CASE</th>
+                <tr class="text-black text-sm leading-normal">
+                    <th class="py-3 px-6 text-white text-left">No.</th>
+                    <th class="py-3 px-6 text-white text-left">TASK</th>
+                    <th class="py-3 px-6 text-green-600 text-center">BEST CASE</th>
                     <th class="py-3 px-6 text-blue-600 text-center">AVERAGE</th>
                     <th class="py-3 px-6 text-red-600 text-center">WORST CASE</th>
                     <th class="py-3 px-6 text-center">
@@ -69,7 +69,7 @@
                         </div>
                     </td>
                     <td class="py-3 px-6 text-center">
-                        <div class="font-bold flex items-center text-cta justify-center">
+                        <div class="font-bold flex items-center text-green-600 justify-center">
                             {{value2.best_hours}}h {{value2.best_minutes}}m
                         </div>
                     </td>
@@ -101,13 +101,13 @@
                     </td>
                     <td class="py-3 px-6 text-left">
                         <div class="flex  items-center">
-                            <input id="task_name" v-on:keyup.enter="nextPlease(value.id)" v-model="task.name" type="text" required class=" appearance-none rounded-none relative block w-full px-3 py-2 border border-brand-light placeholder-brand text-brand-dark rounded-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="Task" />
+                            <input id="task_name" v-on:keyup.enter="nextPlease(value.id)" v-model="task.name" type="text" required class=" appearance-none rounded-none relative block w-full px-3 py-2 border border-brand-light placeholder-brand text-black rounded-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="Task" />
                         </div>
                     </td>
                     <td class="py-3 px-6 text-center">
                         <div class="flex w-36 mx-auto items-center">
-                            <input id="task_best_hours" v-on:keyup.enter="nextPlease(value.id)" v-model="task.best_case.hours" type="number" min="0" required class="text-center appearance-none mr-1 rounded-none relative block w-full px-1 py-2 border border-brand-light placeholder-brand text-brand-dark rounded-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="h" />:
-                            <input id="task_best_minutes" v-on:keyup.enter="nextPlease(value.id)" v-model="task.best_case.minutes" type="number" min="0" max="59" required class="text-center appearance-none ml-1 rounded-none relative block w-full px-1 py-2 border border-brand-light placeholder-brand text-brand-dark rounded-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="m" />
+                            <input id="task_best_hours" v-on:keyup.enter="nextPlease(value.id)" v-model="task.best_case.hours" type="number" min="0" required class="text-center appearance-none mr-1 rounded-none relative block w-full px-1 py-2 border border-brand-light placeholder-brand text-black rounded-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="h" />:
+                            <input id="task_best_minutes" v-on:keyup.enter="nextPlease(value.id)" v-model="task.best_case.minutes" type="number" min="0" max="59" required class="text-center appearance-none ml-1 rounded-none relative block w-full px-1 py-2 border border-brand-light placeholder-brand text-black rounded-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="m" />
                         </div>
                     </td>
                     <td class="py-3 px-6 text-center">
@@ -117,13 +117,13 @@
                     </td>
                     <td class="py-3 px-6 text-center">
                         <div class="flex mx-auto w-36 items-center">
-                            <input id="task_worst_hours" v-on:keyup.enter="nextPlease(value.id)" v-model="task.worst_case.hours" type="number" min="0" required class="text-center appearance-none mr-1 rounded-none relative block w-full px-1 py-2 border border-brand-light placeholder-brand text-brand-dark rounded-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="h" />:
-                            <input id="task_worst_minutes" v-on:keyup.enter="nextPlease(value.id)" v-model="task.worst_case.minutes" type="number" min="0" max="59" required class="text-center appearance-none ml-1 rounded-none relative block w-full px-1 py-2 border border-brand-light placeholder-brand text-brand-dark rounded-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="m" />
+                            <input id="task_worst_hours" v-on:keyup.enter="nextPlease(value.id)" v-model="task.worst_case.hours" type="number" min="0" required class="text-center appearance-none mr-1 rounded-none relative block w-full px-1 py-2 border border-brand-light placeholder-brand text-black rounded-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="h" />:
+                            <input id="task_worst_minutes" v-on:keyup.enter="nextPlease(value.id)" v-model="task.worst_case.minutes" type="number" min="0" max="59" required class="text-center appearance-none ml-1 rounded-none relative block w-full px-1 py-2 border border-brand-light placeholder-brand text-black rounded-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="m" />
                         </div>
                     </td>
                     <td class="py-3 px-6 text-center">
                         <div class="flex item-center justify-center">
-                            <div class="w-4 mr-2 transform text-green-500 hover:text-green-700 hover:scale-110">
+                            <div class="w-4 mr-2 transform text-green-600-500 hover:text-green-600-700 hover:scale-110">
                                 <svg v-on:dblclick.stop @click="nextPlease(value.id)" xmlns="http://www.w3.org/2000/svg" class="cursor-pointer h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
                                 </svg>
@@ -133,10 +133,10 @@
                 </tr>
                 </tbody>
                 <thead class="bg-brand-dark">
-                <tr class="text-white text-sm leading-normal">
+                <tr class="text-black text-sm leading-normal">
                     <th class="py-3 px-6 text-left"></th>
-                    <th class="py-3 px-6 text-left">TOTAL</th>
-                    <th class="py-3 px-6 text-cta text-center">{{ value.best_hours }}h {{ value.best_minutes }}m</th>
+                    <th class="py-3 px-6 text-white text-left">TOTAL</th>
+                    <th class="py-3 px-6 text-green-600 text-center">{{ value.best_hours }}h {{ value.best_minutes }}m</th>
                     <th class="py-3 px-6 text-blue-600 text-center">{{ value.average_hours }}h {{ value.average_minutes }}m</th>
                     <th class="py-3 px-6 text-red-600 text-center">{{ value.worst_hours }}h {{ value.worst_minutes }}m</th>
                     <th class="py-3 px-6 text-center"></th>
@@ -153,7 +153,7 @@
     <div v-if="project_name_modal" class="fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-gray-darkest bg-opacity-75 flex flex-col items-center justify-center">
         <div class="w-full md:w-1/3 items-center p-6 space-x-6 bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-500">
             <div class="font-extrabold mx-auto text-2xl mb-4">CHANGE PROJECT NAME</div>
-            <input v-if="this.getCurrentProject" v-on:keyup.enter="edit_project_name" v-model="project_name" type="text" required class="text-center mx-auto appearance-none rounded-none relative block w-full py-2 border border-brand-light placeholder-brand text-brand-dark rounded-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" :placeholder="this.getCurrentProject.name" />
+            <input v-if="this.getCurrentProject" v-on:keyup.enter="edit_project_name" v-model="project_name" type="text" required class="text-center mx-auto appearance-none rounded-none relative block w-full py-2 border border-brand-light placeholder-brand text-black rounded-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" :placeholder="this.getCurrentProject.name" />
             <div class="mx-auto block">
                 <div @click="project_name_modal=false" class="inline-block hover:bg-brand-dark bg-brand px-4 float-left mt-4 mx-auto py-2 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
                     <span>Close</span>
@@ -167,7 +167,7 @@
     <div v-if="modal" class="fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-gray-darkest bg-opacity-75 flex flex-col items-center justify-center">
         <div class="w-full md:w-1/3 items-center p-6 space-x-6 bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-500">
             <div class="font-extrabold mx-auto text-2xl mb-4">CREATE NEW MODULE</div>
-            <input v-on:keyup.enter="add_module" v-model="module.name" type="text" required class="text-center mx-auto appearance-none rounded-none relative block w-full py-2 border border-brand-light placeholder-brand text-brand-dark rounded-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="Module Name" />
+            <input v-on:keyup.enter="add_module" v-model="module.name" type="text" required class="text-center mx-auto appearance-none rounded-none relative block w-full py-2 border border-brand-light placeholder-brand text-black rounded-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="Module Name" />
             <div class="mx-auto block">
                 <div @click="modal=false" class="inline-block hover:bg-brand-dark bg-brand px-4 float-left mt-4 mx-auto py-2 text-white font-semibold rounded-lg hover:shadow-lg transition duration-3000 cursor-pointer">
                     <span>Close</span>
@@ -183,21 +183,21 @@
     </div>
     <div v-if="this.getUser && this.getCurrentProject">
         <div v-if="this.getUser.id===this.getCurrentProject.assigned_to.id && !pdf" class="flex cursor-pointer justify-between items-center p-2 md:float-right md:mr-5" @click="change_public(!this.getCurrentProject.private_public)">
-            <div class="w-32 h-10 flex items-center bg-cta-light rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-purple-400': this.getCurrentProject.private_public}">
+            <div class="w-32 h-10 flex items-center toggle-bg rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-purple-400': this.getCurrentProject.private_public}">
                 <div class="bg-white w-20 h-10 rounded-full shadow-md text-sm font-bold transform duration-300 ease-in-out" :class="{ 'translate-x-12': this.getCurrentProject.private_public,}"><div class="px-2 py-1 text-xs" v-if="!this.getCurrentProject.private_public">IN PROGRESS</div><div class="px-2 py-2.5 text-xs" v-if="this.getCurrentProject.private_public">DONE</div></div>
             </div>
         </div>
     </div>
     <div v-if="this.getUser && this.getCurrentProject">
         <div v-if="this.getUser.id===this.getCurrentProject.author.id && !pdf && this.getCurrentProject.private_public===1" class="flex cursor-pointer justify-between items-center p-2 md:float-right" @click="change_sent(!this.getCurrentProject.sent_notsent)">
-            <div class="w-32 h-10 flex items-center bg-cta-light rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-blue-600': this.getCurrentProject.sent_notsent}">
+            <div class="w-32 h-10 flex items-center toggle-bg rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-blue-600': this.getCurrentProject.sent_notsent}">
                 <div class="bg-white w-20 h-10 rounded-full shadow-md text-sm font-bold transform duration-300 ease-in-out" :class="{ 'translate-x-12': this.getCurrentProject.sent_notsent}"><div class="px-2 py-2.5 text-xs" v-if="!this.getCurrentProject.sent_notsent">NOT SENT</div><div class="px-2 py-2.5 text-xs" v-if="this.getCurrentProject.sent_notsent">SENT</div></div>
             </div>
         </div>
     </div>
     <div v-if="this.getUser && this.getCurrentProject">
         <div v-if="this.getUser.id===this.getCurrentProject.author.id && !pdf && this.getCurrentProject.private_public===1" class="flex cursor-pointer justify-between items-center p-2 md:float-right" @click="change_approved(!this.getCurrentProject.approved_notapproved)">
-            <div class="w-32 h-10 flex items-center bg-cta-light rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-cta': this.getCurrentProject.approved_notapproved}">
+            <div class="w-32 h-10 flex items-center toggle-bg rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-cta': this.getCurrentProject.approved_notapproved}">
                 <div class="bg-white w-20 h-10 rounded-full shadow-md text-sm font-bold transform duration-300 ease-in-out" :class="{ 'translate-x-12': this.getCurrentProject.approved_notapproved,}"><div class="px-2 py-1 text-xs" v-if="!this.getCurrentProject.approved_notapproved">NOT APPROVED</div><div class="px-2 py-2.5 text-xs" v-if="this.getCurrentProject.approved_notapproved">APPROVED</div></div>
             </div>
         </div>
@@ -209,7 +209,7 @@
                 <div class="text-lg mr-2 inline-block">{{ this.getCurrentProject.average_hours }}h</div>
                 <div class="text-lg inline-block">{{ this.getCurrentProject.average_minutes }}m</div>
             </div>
-            <div class="flex mt-2 text-cta font-extrabold text-3xl leading-normal">
+            <div class="flex mt-2 text-green-600 font-extrabold text-3xl leading-normal">
                 <div class="mr-2 text-lg inline-block">Best Case: </div>
                 <div class="text-lg mr-2 inline-block">{{ this.getCurrentProject.best_hours }}h</div>
                 <div class="text-lg inline-block">{{ this.getCurrentProject.best_minutes }}m</div>
@@ -259,7 +259,7 @@
                     </svg>
                     <div class="flex flex-col ml-3">
                         <div class="font-medium leading-none">Delete Task?</div>
-                        <p class="text-sm text-cta leading-none mt-1">You cannot undo this action!</p>
+                        <p class="text-sm text-green-600 leading-none mt-1">You cannot undo this action!</p>
                     </div>
                 </div>
             </div>
@@ -281,7 +281,7 @@
                     </svg>
                     <div class="flex flex-col ml-3">
                         <div class="font-medium leading-none">Delete Module?</div>
-                        <p class="text-sm text-cta leading-none mt-1">You cannot undo this action!</p>
+                        <p class="text-sm text-green-600 leading-none mt-1">You cannot undo this action!</p>
                     </div>
                 </div>
             </div>
@@ -303,7 +303,7 @@
                     </svg>
                     <div v-if="this.getCurrentProject" class="flex flex-col ml-3">
                         <div class="font-medium leading-none">Delete <div class="font-extrabold inline-block italic">"{{this.getCurrentProject.name}}"</div> Project?</div>
-                        <p class="text-sm text-cta leading-none mt-1">You cannot undo this action!</p>
+                        <p class="text-sm text-green-600 leading-none mt-1">You cannot undo this action!</p>
                     </div>
                 </div>
             </div>
@@ -313,8 +313,8 @@
             </div>
         </div>
     </div>
-    <div v-if="!pdf && this.getCurrentProject" class="antialiased mt-4 bg-brand-light p-4 rounded-xl mx-auto max-w-screen-sm">
-        <h3 class="mb-4 text-lg font-semibold text-brand-dark">Comments</h3>
+    <div v-if="!pdf && this.getCurrentProject" class="antialiased mt-4 bg-brand-light border-dark p-4 rounded-xl mx-auto max-w-screen-sm">
+        <h3 class="mb-4 text-lg font-semibold text-black">Comments</h3>
 
         <div v-if="this.getCurrentProject.comments" class=" space-y-4">
 
@@ -348,7 +348,7 @@
                             <div v-if="!reply.user.logo" class="flex-shrink-0 mr-3">
                                 <img class="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10" src="/storage/images/user.png" alt="">
                             </div>
-                            <div class="flex-1 bg-white rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
+                            <div class="flex-1 bg-white rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed border">
                                 <div class="mb-3">
                                     <strong class="inline-block">{{reply.user.name}}</strong>
                                     <svg v-if="this.getUser.id===reply.user_id" @click="check_editing_reply(reply.id, reply.user_id); editing_reply_text=reply.text" xmlns="http://www.w3.org/2000/svg" class="inline-block -ml-5 cursor-pointer text-yellow-500 float-right transform hover:scale-110 hover:text-yellow-700 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -381,14 +381,14 @@
                     </div>
 
                     <div class="mx-auto mt-5" v-if="reply_id===comment.id">
-                        <textarea class="flex-1 w-11/12 outline-brand-dark rounded-lg float-left ml-3 px-4 py-2 sm:px-6 sm:py-4 leading-relaxed my-3 h-24 resize-none" v-on:keyup.enter="add_reply(comment.id)" v-model="reply" placeholder="Leave a reply..."></textarea>
+                        <textarea class="flex-1 w-11/12 outline-brand-dark border-dark rounded-lg float-left ml-3 px-4 py-2 sm:px-6 sm:py-4 leading-relaxed my-3 h-24 resize-none" v-on:keyup.enter="add_reply(comment.id)" v-model="reply" placeholder="Leave a reply..."></textarea>
                         <button @click="add_reply(comment.id)" class="py-2 bg-brand hover:bg-brand-dark text-white font-bold rounded mb-4 px-4 float-right">ADD</button>
                     </div>
                     <span v-if="reply_id===comment.id" @click="reply_id=null" class="mt-2 text-sm cursor-pointer float-left text-brand font-italic">Hide replies</span>
                 </div>
             </div>
         </div>
-            <textarea class="flex-1 w-11/12 outline-brand-dark rounded-lg float-right px-4 py-2 sm:px-6 sm:py-4 leading-relaxed my-3 h-32 resize-none" v-on:keyup.enter="add_comment" v-model="comment" placeholder="Leave a comment..."></textarea>
+            <textarea class="flex-1 w-11/12 border-dark outline-brand-dark rounded-lg float-right px-4 py-2 sm:px-6 sm:py-4 leading-relaxed my-3 h-32 resize-none" v-on:keyup.enter="add_comment" v-model="comment" placeholder="Leave a comment..."></textarea>
             <button @click="add_comment" class="py-2 bg-brand hover:bg-brand-dark text-white font-bold rounded mb-4 px-4 float-right">ADD</button>
     </div>
 </div>
@@ -745,7 +745,7 @@ export default{
                 });
         },
         change_sent(value){
-            if (confirm("Are you sure that you want to status of this project?") === true) {
+            if (confirm("Are you sure that you want to change the status of this project?") === true) {
                 axios.post('http://estimate.local.com/api/edit_project', {
                     project_id: this.getCurrentProject.id,
                     sent: value
@@ -923,3 +923,11 @@ export default{
     },
 }
 </script>
+<style scoped>
+    .border-dark{
+        border: 1px black solid !important
+    }
+    .toggle-bg{
+        background-color: #2c3e50 !important;
+    }
+</style>

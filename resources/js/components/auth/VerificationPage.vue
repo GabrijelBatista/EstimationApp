@@ -11,11 +11,11 @@
                     <div>
                         <label for="token" class="sr-only">Verification code</label>
                         <span class="text-xs font-italic">Verification code was sent to your email.</span>
-                        <input id="token" v-model="token" name="token" type="text" required="" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-brand-light placeholder-brand text-brand-dark rounded-t-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="Verification code" />
+                        <input id="token" v-model="token" name="token" type="text" required="" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-brand-light placeholder-brand text-black rounded-t-md focus:outline-none focus:ring-brand focus:border-brand focus:z-10 sm:text-sm" placeholder="Verification code" />
                     </div>
                 </div>
                 <div>
-                    <button @click="verify" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand hover:bg-brand focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand">
+                    <button @click="verify" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand">
                         Confirm
                     </button>
                 </div>
