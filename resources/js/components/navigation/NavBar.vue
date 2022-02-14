@@ -36,7 +36,7 @@
                                 <MenuItem :key="notification.id" v-for="notification in this.getUser.unread_notifications" v-slot="{ active }">
                                     <div @click="read_notification(notification.id, false)" class="cursor-pointer hover:no-underline border-b w-full" :class="[!notification.read_at ? 'bg-yellow-500 hover:bg-yellow-700' : '', 'block px-4 py-2 text-sm text-brand-light']">{{notification.data.estimation.body}}</div>
                                 </MenuItem>
-                                <div v-if="!this.getUserNotifications[0] && !this.getUser.unread_notifications[0]" class="py-2 hover:no-underline border-b w-full">Nothing to show</div>
+                                <div v-if="!this.getUserNotifications && !this.getUser.unread_notifications && !this.getUserNotifications[0] && !this.getUser.unread_notifications[0]" class="py-2 hover:no-underline border-b w-full">Nothing to show</div>
                             </MenuItems>
                             </div>
                         </transition>

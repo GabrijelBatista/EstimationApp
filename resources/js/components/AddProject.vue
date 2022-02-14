@@ -1,6 +1,6 @@
 <template>
 <div id="pdf" class=" bg-cta-light text-black overflow-x-auto" ref="content">
-    <button v-if="!pdf" @click="save_pdf(pdf=true)" class="absolute top-30 right-2">
+    <button v-if="!pdf" @click="save_pdf(pdf=true)" class="absolute top-30 right-2 border-dark rounded-lg p-2 transform hover:scale-110 shadow-md bg-white">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
         </svg>
@@ -30,11 +30,11 @@
                     <div class="inline-block">
                         <div class="inline-block" v-if="edit_module_name!=value.name">{{ value.name }}</div>
                         <input class="inline-block text-black text-center font-medium" v-if="edit_module_name===value.name" v-model="module_name" v-on:keyup.enter="save_module_name(value.id)">
-                        <svg v-if="this.getUser.id===this.getCurrentProject.assigned_id && !pdf" @click="open_edit_module_name(value.name)" xmlns="http://www.w3.org/2000/svg" class="inline-block cursor-pointer ml-2 text-yellow-500 transform hover:scale-110 hover:text-yellow-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg v-if="this.getUser.id===this.getCurrentProject.assigned_id && !pdf" :class="this.getCurrentProject.sent_notsent ? 'disabled-toggle' : 'cursor-pointer'" @click="open_edit_module_name(value.name)" xmlns="http://www.w3.org/2000/svg" class="inline-block cursor-pointer ml-2 text-yellow-500 transform hover:scale-110 hover:text-yellow-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                         </svg>
                     </div>
-                    <div v-if="this.getUser.id===this.getCurrentProject.assigned_id && !pdf" @click="delete_module_modal=true; delete_module_id=value.id" class="w-6 absolute right-4 inline-block transform cursor-pointer text-danger hover:text-danger-dark hover:scale-110">
+                    <div v-if="this.getUser.id===this.getCurrentProject.assigned_id && !pdf" :class="this.getCurrentProject.sent_notsent ? 'disabled-toggle' : 'cursor-pointer'" @click="delete_module_modal=true; delete_module_id=value.id" class="w-6 absolute right-4 inline-block transform cursor-pointer text-danger hover:text-danger-dark hover:scale-110">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
@@ -50,7 +50,7 @@
                     <th class="py-3 px-6 text-blue-600 text-center">AVERAGE</th>
                     <th class="py-3 px-6 text-red-600 text-center">WORST CASE</th>
                     <th class="py-3 px-6 text-center">
-                        <svg v-if="this.getUser.id===this.getCurrentProject.assigned_id && !pdf" @click="edit_module(value.id)" xmlns="http://www.w3.org/2000/svg" class="inline-block cursor-pointer text-yellow-500 transform hover:scale-110 hover:text-yellow-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg v-if="this.getUser.id===this.getCurrentProject.assigned_id && !pdf" :class="this.getCurrentProject.sent_notsent ? 'disabled-toggle' : 'cursor-pointer'" @click="edit_module(value.id)" xmlns="http://www.w3.org/2000/svg" class="inline-block cursor-pointer text-yellow-500 transform hover:scale-110 hover:text-yellow-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                         </svg>
                     </th>
@@ -83,7 +83,7 @@
                             {{value2.worst_hours}}h {{value2.worst_minutes}}m
                         </div>
                     </td>
-                    <td v-if="this.getCurrentProject.assigned_id===this.getUser.id && !pdf" class="py-3 px-6 text-center">
+                    <td v-if="this.getCurrentProject.assigned_id===this.getUser.id && !pdf" :class="this.getCurrentProject.sent_notsent ? 'disabled-toggle' : 'cursor-pointer'" class="py-3 px-6 text-center">
                         <div class="flex item-center justify-center">
                             <div @click="delete_task_modal=true; delete_task_id=value2.id" class="w-4 mr-2 transform cursor-pointer text-danger hover:text-danger-dark hover:scale-110">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -93,7 +93,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr v-if="edit===value.id && !pdf" class="border-2 border-brand-light">
+                <tr v-if="edit===value.id && !pdf" :class="this.getCurrentProject.sent_notsent ? 'disabled-toggle' : 'cursor-pointer'" class="border-2 border-brand-light">
                     <td class="py-3 px-6 text-left whitespace-nowrap w-16">
                         <div class="flex w-16 items-center">
 
@@ -179,26 +179,26 @@
         </div>
     </div>
     <div v-if="this.getUser && this.getCurrentProject" class="flex m-auto w-max">
-        <div @click="modal=true" v-if="this.getUser.id===this.getCurrentProject.assigned_to.id && !pdf" class="px-5 py-3 mt-4 cursor-pointer bg-brand-light hover:bg-brand rounded-2xl border-2 font-extrabold uppercase text-xl leading-normal">Create Module</div>
+        <div @click="modal=true" v-if="this.getUser.id===this.getCurrentProject.assigned_to.id && !pdf" :class="this.getCurrentProject.sent_notsent ? 'disabled-toggle' : 'cursor-pointer'" class="px-5 py-3 mt-4 cursor-pointer bg-brand-light hover:bg-brand rounded-2xl border-2 font-extrabold uppercase text-xl leading-normal">Create Module</div>
     </div>
     <div v-if="this.getUser && this.getCurrentProject">
-        <div v-if="this.getUser.id===this.getCurrentProject.assigned_to.id && !pdf" class="flex cursor-pointer justify-between items-center p-2 md:float-right md:mr-5" @click="change_public(!this.getCurrentProject.private_public)">
+        <div :class="this.getCurrentProject.sent_notsent ? 'disabled-toggle' : 'cursor-pointer'" v-if="this.getUser.id===this.getCurrentProject.assigned_to.id && !pdf" class="flex justify-between items-center p-2 md:float-right md:mr-5" @click="change_public(!this.getCurrentProject.private_public)">
             <div class="w-32 h-10 flex items-center toggle-bg rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-purple-400': this.getCurrentProject.private_public}">
                 <div class="bg-white w-20 h-10 rounded-full shadow-md text-sm font-bold transform duration-300 ease-in-out" :class="{ 'translate-x-12': this.getCurrentProject.private_public,}"><div class="px-2 py-1 text-xs" v-if="!this.getCurrentProject.private_public">IN PROGRESS</div><div class="px-2 py-2.5 text-xs" v-if="this.getCurrentProject.private_public">DONE</div></div>
             </div>
         </div>
     </div>
     <div v-if="this.getUser && this.getCurrentProject">
-        <div v-if="this.getUser.id===this.getCurrentProject.author.id && !pdf && this.getCurrentProject.private_public===1" class="flex cursor-pointer justify-between items-center p-2 md:float-right" @click="change_sent(!this.getCurrentProject.sent_notsent)">
-            <div class="w-32 h-10 flex items-center toggle-bg rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-blue-600': this.getCurrentProject.sent_notsent}">
-                <div class="bg-white w-20 h-10 rounded-full shadow-md text-sm font-bold transform duration-300 ease-in-out" :class="{ 'translate-x-12': this.getCurrentProject.sent_notsent}"><div class="px-2 py-2.5 text-xs" v-if="!this.getCurrentProject.sent_notsent">NOT SENT</div><div class="px-2 py-2.5 text-xs" v-if="this.getCurrentProject.sent_notsent">SENT</div></div>
+        <div v-if="this.getUser && this.getCurrentProject">
+            <div v-if="this.getUser.id===this.getCurrentProject.author.id && !pdf" :class="!this.getCurrentProject.sent_notsent ? 'disabled-toggle' : 'cursor-pointer'" class="flex justify-between items-center p-2 md:float-right" @click="change_approved(!this.getCurrentProject.approved_notapproved)">
+                <div class="w-32 h-10 flex items-center toggle-bg rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-cta': this.getCurrentProject.approved_notapproved}">
+                    <div class="bg-white w-20 h-10 rounded-full shadow-md text-sm font-bold transform duration-300 ease-in-out" :class="{ 'translate-x-12': this.getCurrentProject.approved_notapproved,}"><div class="px-2 py-1 text-xs" v-if="!this.getCurrentProject.approved_notapproved">NOT APPROVED</div><div class="px-2 py-2.5 text-xs" v-if="this.getCurrentProject.approved_notapproved">APPROVED</div></div>
+                </div>
             </div>
         </div>
-    </div>
-    <div v-if="this.getUser && this.getCurrentProject">
-        <div v-if="this.getUser.id===this.getCurrentProject.author.id && !pdf && this.getCurrentProject.private_public===1" class="flex cursor-pointer justify-between items-center p-2 md:float-right" @click="change_approved(!this.getCurrentProject.approved_notapproved)">
-            <div class="w-32 h-10 flex items-center toggle-bg rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-cta': this.getCurrentProject.approved_notapproved}">
-                <div class="bg-white w-20 h-10 rounded-full shadow-md text-sm font-bold transform duration-300 ease-in-out" :class="{ 'translate-x-12': this.getCurrentProject.approved_notapproved,}"><div class="px-2 py-1 text-xs" v-if="!this.getCurrentProject.approved_notapproved">NOT APPROVED</div><div class="px-2 py-2.5 text-xs" v-if="this.getCurrentProject.approved_notapproved">APPROVED</div></div>
+        <div v-if="this.getUser.id===this.getCurrentProject.author.id && !pdf" :class="this.getCurrentProject.approved_notapproved ? 'disabled-toggle' : 'cursor-pointer'" class="flex justify-between items-center p-2 md:float-right" @click="change_sent(!this.getCurrentProject.sent_notsent)">
+            <div class="w-32 h-10 flex items-center toggle-bg rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-blue-600': this.getCurrentProject.sent_notsent}">
+                <div class="bg-white w-20 h-10 rounded-full shadow-md text-sm font-bold transform duration-300 ease-in-out" :class="{ 'translate-x-12': this.getCurrentProject.sent_notsent}"><div class="px-2 py-2.5 text-xs" v-if="!this.getCurrentProject.sent_notsent">NOT SENT</div><div class="px-2 py-2.5 text-xs" v-if="this.getCurrentProject.sent_notsent">SENT</div></div>
             </div>
         </div>
     </div>
@@ -259,7 +259,7 @@
                     </svg>
                     <div class="flex flex-col ml-3">
                         <div class="font-medium leading-none">Delete Task?</div>
-                        <p class="text-sm text-green-600 leading-none mt-1">You cannot undo this action!</p>
+                        <p class="text-sm text-red-600 leading-none mt-1">You cannot undo this action!</p>
                     </div>
                 </div>
             </div>
@@ -281,7 +281,7 @@
                     </svg>
                     <div class="flex flex-col ml-3">
                         <div class="font-medium leading-none">Delete Module?</div>
-                        <p class="text-sm text-green-600 leading-none mt-1">You cannot undo this action!</p>
+                        <p class="text-sm text-red-600 leading-none mt-1">You cannot undo this action!</p>
                     </div>
                 </div>
             </div>
@@ -303,7 +303,7 @@
                     </svg>
                     <div v-if="this.getCurrentProject" class="flex flex-col ml-3">
                         <div class="font-medium leading-none">Delete <div class="font-extrabold inline-block italic">"{{this.getCurrentProject.name}}"</div> Project?</div>
-                        <p class="text-sm text-green-600 leading-none mt-1">You cannot undo this action!</p>
+                        <p class="text-sm text-red-600 leading-none mt-1">You cannot undo this action!</p>
                     </div>
                 </div>
             </div>
@@ -751,7 +751,7 @@ export default{
                     sent: value
                 })
                     .then(response => {
-                        if(value===1) {
+                        if(value) {
                             axios.post('http://estimate.local.com/api/estimations-notification', {
                                 for: response.data.assigned_to.id,
                                 pm: response.data.project_manager.id,
@@ -780,8 +780,7 @@ export default{
                     approved: value
                 })
                     .then(response => {
-                        console.log(value)
-                        if(value===true) {
+                        if(value) {
                             axios.post('http://estimate.local.com/api/estimations-notification', {
                                 for: response.data.assigned_to.id,
                                 pm: response.data.project_manager.id,
@@ -810,7 +809,7 @@ export default{
                     public: value
                 })
                     .then(response => {
-                        if(value===1) {
+                        if(value) {
                             axios.post('http://estimate.local.com/api/estimations-notification', {
                                 for: response.data.author.id,
                                 pm: response.data.project_manager.id,
@@ -929,5 +928,9 @@ export default{
     }
     .toggle-bg{
         background-color: #2c3e50 !important;
+    }
+    .disabled-toggle{
+        pointer-events: none;
+        opacity:0.5
     }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div>
     <div class="md:h-75 md:flex mb-2 w-full">
-            <input id="search" @keyup.enter="search_projects" v-model="search" class="border-2 mx-auto border-brand-dark bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
+            <input id="search" @input="search_projects" @keyup.delete="search_projects" v-model="search" class="border-2 mx-auto border-brand-dark bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
                    type="search" name="search" placeholder="Search">
     </div>
 <div class="container flex flex-grow items-center justify-center mx-auto px-4 md:px-12">
@@ -16,18 +16,12 @@
     <div :key="project.id" v-if="this.getProjects" class="my-3 px-3 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3" v-for="project in this.getProjects.data">
             <router-link class="hover:no-underline" :to="'/project/'+project.name">
                 <div class="bg-white h-96 max-w-xs mx-auto shadow-lg border-b-4 border-cta-dark rounded-2xl overflow-hidden  hover:shadow-2xl transition duration-500 transform hover:scale-105 cursor-pointer" >
-                    <div v-if="!project.sent_notsent && !project.approved_notapproved" :class="project.private_public ? 'bg-green-600' : 'bg-gray-darkest'" class="flex h-14 items-center">
+                    <div :class="[!project.approved_notapproved && !project.sent_notsent && !project.private_public ? 'bg-gray-darkest' : '', !project.approved_notapproved && !project.sent_notsent && project.private_public ? 'bg-blue-600' : '', !project.approved_notapproved && project.sent_notsent && project.private_public ? 'bg-yellow-600' : '', project.approved_notapproved && project.sent_notsent && project.private_public ? 'bg-green-600' : '']" class="flex h-14 items-center">
                         <p class="mx-auto font-bold inline-block text-white uppercase">{{project.name}}</p>
-                        <p v-if="project.approved_notapproved===0 && project.sent_notsent===0 && project.private_public===0" class="mx-auto font-bold inline-block text-white uppercase">In progress</p>
-                        <p v-if="project.approved_notapproved===0 && project.sent_notsent===0 && project.private_public===1" class="mx-auto font-bold inline-block text-white uppercase">Done</p>
-                        <p v-if="project.approved_notapproved===0 && project.sent_notsent===1" class="mx-auto font-bold inline-block text-white uppercase">Sent</p>
-                        <p v-if="project.approved_notapproved===1 " class="mx-auto font-bold inline-block text-white uppercase">Approved</p>
-                    </div>
-                    <div v-if="project.sent_notsent && !project.approved_notapproved" class="flex h-14 bg-blue-600 items-center">
-                        <p class="mx-auto font-bold text-black uppercase">{{project.name}}</p>
-                    </div>
-                    <div v-if="project.approved_notapproved" class="flex bg-green-500 h-14 items-center">
-                        <p class="mx-auto font-bold text-black uppercase">{{project.name}}</p>
+                        <p v-if="!project.approved_notapproved && !project.sent_notsent && !project.private_public" class="mx-auto font-bold inline-block text-white uppercase">In progress</p>
+                        <p v-if="!project.approved_notapproved && !project.sent_notsent && project.private_public" class="mx-auto font-bold inline-block text-white uppercase">Done</p>
+                        <p v-if="!project.approved_notapproved && project.sent_notsent && project.private_public" class="mx-auto font-bold inline-block text-white uppercase">Sent</p>
+                        <p v-if="project.approved_notapproved && project.sent_notsent && project.private_public" class="mx-auto font-bold inline-block text-white uppercase">Approved</p>
                     </div>
                     <div v-if="project.average_hours">
                         <p class="py-1 ml-4 text-lg text-blue-600 tracking-wide">Average: {{ project.average_hours }}h {{project.average_minutes}}m</p>
@@ -120,7 +114,7 @@ export default {
            name: null,
            modal: false,
            pm: null,
-           search: null,
+           search: "",
        }
     },
     computed:{
@@ -134,14 +128,17 @@ export default {
     },
     methods: {
         search_projects(){
-            if(this.search.length>2) {
-                axios.get('http://estimate.local.com/api/search/'+this.search)
+            if(this.search.length>1) {
+                axios.get('http://estimate.local.com/api/search/' + this.search)
                     .then(response => {
                         this.$store.commit('setProjects', response.data)
                     })
                     .catch(function (error) {
                         console.error(error);
                     });
+            }
+            else{
+                this.get_projects(1)
             }
         },
         add_project(){
